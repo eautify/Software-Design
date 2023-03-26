@@ -20,6 +20,8 @@ Module Module1
     Public LName As String
     Public FullName As String
 
+    Public Serial As Integer = 0
+
 
 
     Public tempPass As String = "tempPass123!"

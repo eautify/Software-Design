@@ -35,7 +35,6 @@ Public Class MainForm
     Dim rate As Double
     Dim y As Double
 
-
     Private Sub btnExit_Click(sender As Object, e As EventArgs) Handles btnExit.Click
         LogIn_Form.Show()
         Me.Hide()
@@ -55,6 +54,19 @@ Public Class MainForm
             txtTicketNumberExit.AutoCompleteSource = AutoCompleteSource.CustomSource
             txtTicketNumberExit.AutoCompleteCustomSource = coloumn1
             txtTicketNumberExit.AutoCompleteMode = AutoCompleteMode.Suggest
+
+            Dim columnName As String = "ID"
+            Dim query As String = String.Format("SELECT MAX({0}) AS MaxValue FROM ticketNumbers;", columnName)
+            connect()
+            Dim command As New OleDbCommand(query, conn)
+            Dim maxValueObject As Object = command.ExecuteScalar()
+            conn.Close()
+            If maxValueObject Is DBNull.Value Then
+                Serial = 0
+            Else
+                Serial = CInt(maxValueObject)
+            End If
+
         Catch ex As Exception
             dbFailed()
             MessageBox.Show("An error occurred: " & ex.Message)
@@ -147,15 +159,20 @@ Public Class MainForm
 
         Dim commList As OleDbCommand
         Dim commLog As OleDbCommand
+        Dim commTix As OleDbCommand
         connect()
         commList = New OleDbCommand
         commLog = New OleDbCommand
+        commTix = New OleDbCommand
         commList.Connection = conn
         commLog.Connection = conn
+        commTix.Connection = conn
         commList.CommandText = "Insert into tblVehicleList values('" & cbFloor.Text & "','" & cbParkingLocation.Text & "', '" & txtTicketNumber.Text & "', '" & txtPlateNumber.Text & "', '" & cbVehicleType.Text & "', '" & Format(Now, "MM/dd/yy hh:mm tt") & "')"
         commLog.CommandText = "Insert into tblParkingActivity values('" & txtTicketNumber.Text & "','" & txtPlateNumber.Text & "','" & cbVehicleType.Text & "','" & cbParkingLocation.Text & "','" & Format(Now, "MM/dd/yy hh:mm tt") & "','" & "Vehicle entered." & "')"
+        commTix.CommandText = "Insert into ticketNumbers values('" & Serial & "', '" & txtTicketNumber.Text & "')"
         commList.ExecuteNonQuery()
         commLog.ExecuteNonQuery()
+        commTix.ExecuteNonQuery()
         populate()
         conn.Close()
     End Sub
@@ -178,12 +195,13 @@ Public Class MainForm
                         cbParkingLocation.SelectedIndex = -1
                     Else
                         If MsgBox("Confrim parking?", vbYesNo + vbQuestion, "Confirm") = vbYes Then
+                            Serial += 1
                             If cbVehicleType.SelectedIndex = 0 Then
                                 If avail2WheelLots = 0 Then
                                     MsgBox("Parking lots for 2 wheels vehicle are full.", vbInformation, "Parking lot full")
                                 Else
                                     avail2WheelLots = avail2WheelLots - 1
-                                    txtTicketNumber.Text = cbParkingLocation.Text & Format(Now, "ms")
+                                    txtTicketNumber.Text = cbParkingLocation.Text & Serial.ToString("000")
                                     rate = vehicle2Wheels
                                     createTicket()
                                 End If
@@ -192,7 +210,7 @@ Public Class MainForm
                                     MsgBox("Parking lots for 4 wheels vehicle are full.", vbInformation, "Parking lot full")
                                 Else
                                     avail4WheelLots = avail4WheelLots - 1
-                                    txtTicketNumber.Text = cbParkingLocation.Text & Format(Now, "ms")
+                                    txtTicketNumber.Text = cbParkingLocation.Text & Serial.ToString("000")
                                     rate = vehicle4Wheels
                                     createTicket()
                                 End If
