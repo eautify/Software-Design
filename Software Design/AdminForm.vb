@@ -30,7 +30,7 @@ Public Class AdminForm
                         connect()
                         commList = New OleDbCommand
                         commList.Connection = conn
-                        commList.CommandText = "Insert into employeeLogin values('" & txtUsernameCreate.Text & "','" & tempPass & "', '" & dtpBday.Text & "','" & txtFirstName.Text & "', '" & txtLastName.Text & "')"
+                        commList.CommandText = "Insert into employeeLogin values('" & txtUsernameCreate.Text & "','" & tempPass & "', '" & dtpBday.Text & "','" & txtFirstName.Text & "', '" & txtLastName.Text & "', '" & "Active" & "')"
                         commList.ExecuteNonQuery()
 
                         conn.Close()
@@ -57,7 +57,7 @@ Public Class AdminForm
 
                         commList = New OleDbCommand
                         commList.Connection = conn
-                        commList.CommandText = "Insert into managerLogin values('" & txtUsernameCreate.Text & "','" & tempPass & "', '" & dtpBday.Text & "','" & txtFirstName.Text & "', '" & txtLastName.Text & "')"
+                        commList.CommandText = "Insert into managerLogin values('" & txtUsernameCreate.Text & "','" & tempPass & "', '" & dtpBday.Text & "','" & txtFirstName.Text & "', '" & txtLastName.Text & "', '" & "Active" & "')"
                         commList.ExecuteNonQuery()
 
                         conn.Close()
@@ -163,16 +163,16 @@ Public Class AdminForm
         If InputBox("To confirm the deletion of the account, please provide the password for the administrator account.", "Delete Account") = "Admiiin123!" Then
             If cbAccountTypeDelete.SelectedIndex = 0 Then
                 Try
-                    da = New OleDbDataAdapter("Select * from employeeLogin where USERNAME='" & txtUsernameDelete.Text & "' and BDAY='" & dtpBDAYDelete.Text & "'", conn)
+                    da = New OleDbDataAdapter("Select * from employeeLogin where Status='" & "Active" & "' and USERNAME='" & txtUsernameDelete.Text & "' and BDAY='" & dtpBDAYDelete.Text & "'", conn)
                     dset = New DataSet
                     da.Fill(dset, "employeeLogin")
                     If dset.Tables("employeeLogin").Rows.Count = 1 Then
                         connect()
-                        Dim commDelete As OleDbCommand
-                        commDelete = New OleDbCommand
-                        commDelete.Connection = conn
-                        commDelete.CommandText = "Delete from employeeLogin where USERNAME='" & txtUsernameDelete.Text & "'"
-                        commDelete.ExecuteNonQuery()
+                        Dim sql As String = "UPDATE employeeLogin SET [Status]=@Status WHERE [USERNAME]=@USERNAME"
+                        Dim cmd As New OleDbCommand(sql, conn)
+                        cmd.Parameters.AddWithValue("@Status", "Inactive")
+                        cmd.Parameters.AddWithValue("@USERNAME", txtUsernameReset.Text)
+                        cmd.ExecuteNonQuery()
                         MessageBox.Show("The account " & txtUsernameDelete.Text & " has been deleted successfully.", "Account deleted!", MessageBoxButtons.OK, MessageBoxIcon.Information)
                         txtUsernameDelete.Clear()
                         cbAccountTypeDelete.SelectedIndex = 0
@@ -187,16 +187,16 @@ Public Class AdminForm
                 End Try
             Else
                 Try
-                    da = New OleDbDataAdapter("Select * from managerLogin where USERNAME='" & txtUsernameDelete.Text & "' and BDAY='" & dtpBDAYDelete.Text & "'", conn)
+                    da = New OleDbDataAdapter("Select * from managerLogin where Status='" & "Active" & "' and USERNAME='" & txtUsernameDelete.Text & "' and BDAY='" & dtpBDAYDelete.Text & "'", conn)
                     dset = New DataSet
                     da.Fill(dset, "managerLogin")
                     If dset.Tables("managerLogin").Rows.Count = 1 Then
                         connect()
-                        Dim commDelete As OleDbCommand
-                        commDelete = New OleDbCommand
-                        commDelete.Connection = conn
-                        commDelete.CommandText = "Delete from managerLogin where USERNAME='" & txtUsernameDelete.Text & "'"
-                        commDelete.ExecuteNonQuery()
+                        Dim sql As String = "UPDATE managerLogin SET [Status]=@Status WHERE [USERNAME]=@USERNAME"
+                        Dim cmd As New OleDbCommand(sql, conn)
+                        cmd.Parameters.Add("@Status", OleDbType.VarChar).Value = "Inactive!"
+                        cmd.Parameters.Add("@USERNAME", OleDbType.VarChar).Value = txtUsernameReset.Text
+                        cmd.ExecuteNonQuery()
                         MessageBox.Show("The account " & txtUsernameDelete.Text & " has been deleted successfully.", "Account deleted!", MessageBoxButtons.OK, MessageBoxIcon.Information)
                         txtUsernameDelete.Clear()
                         cbAccountTypeDelete.SelectedIndex = 0

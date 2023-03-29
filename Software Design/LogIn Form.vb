@@ -30,7 +30,7 @@ Public Class LogIn_Form
             connect()
             If cbLoginType.SelectedIndex = 0 Then
                 Try
-                    da = New OleDbDataAdapter("Select * from employeeLogin where USERNAME='" & txtUserNameLogin.Text & "' and PASSWORD='" & txtPassword1.Text & "'", conn)
+                    da = New OleDbDataAdapter("Select * from employeeLogin where Status='" & "Active" & "' and USERNAME='" & txtUserNameLogin.Text & "' and PASSWORD='" & txtPassword1.Text & "'", conn)
                     dset = New DataSet
                     da.Fill(dset, "employeeLogin")
 
@@ -72,7 +72,7 @@ Public Class LogIn_Form
                 End If
             Else
                 Try
-                    da = New OleDbDataAdapter("Select * from managerLogin where USERNAME='" & txtUserNameLogin.Text & "' and PASSWORD='" & txtPassword1.Text & "'", conn)
+                    da = New OleDbDataAdapter("Select * from managerLogin where Status='" & "Active" & "' and USERNAME='" & txtUserNameLogin.Text & "' and PASSWORD='" & txtPassword1.Text & "'", conn)
                     dset = New DataSet
                     da.Fill(dset, "managerLogin")
 
