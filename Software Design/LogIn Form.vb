@@ -24,18 +24,26 @@ Public Class LogIn_Form
     End Sub
 
     Private Sub Guna2Button1_Click(sender As Object, e As EventArgs) Handles btnLogin.Click
+        Dim accType As String
+        If cbLoginType.SelectedIndex = 0 Then
+            accType = "employeeLogin"
+        ElseIf cbLoginType.SelectedIndex = 1 Then
+            accType = "admin"
+        Else
+            accType = "managerLogin"
+        End If
+
         If cbLoginType.Text = "" Or txtUserNameLogin.Text = "" Or txtPassword1.Text = Nothing Then
             loginFailed()
         Else
             connect()
-            If cbLoginType.SelectedIndex = 0 Then
+            If cbLoginType.SelectedIndex = 0 Or cbLoginType.SelectedIndex = 2 Then
                 Try
-                    da = New OleDbDataAdapter("Select * from employeeLogin where Status='" & "Active" & "' and USERNAME='" & txtUserNameLogin.Text & "' and PASSWORD='" & txtPassword1.Text & "'", conn)
+                    da = New OleDbDataAdapter("Select * from " & accType & " where Status='" & "Active" & "' and USERNAME='" & txtUserNameLogin.Text & "' and PASSWORD='" & txtPassword1.Text & "'", conn)
                     dset = New DataSet
-                    da.Fill(dset, "employeeLogin")
-
-                    If dset.Tables("employeeLogin").Rows.Count = 1 Then
-                        Dim cmd As New OleDbCommand("Select * from employeeLogin where USERNAME=@USERNAME", conn)
+                    da.Fill(dset, accType)
+                    If dset.Tables(accType).Rows.Count = 1 Then
+                        Dim cmd As New OleDbCommand("Select * from " & accType & " where USERNAME=@USERNAME", conn)
                         cmd.Parameters.AddWithValue("USERNAME", txtUserNameLogin.Text.Trim)
                         Dim myreader As OleDbDataReader
                         myreader = cmd.ExecuteReader
@@ -50,7 +58,12 @@ Public Class LogIn_Form
                             txtUsernameCreate.Text = txtUserNameLogin.Text
                             txtAccountType.Text = cbLoginType.Text
                         Else
-                            TabControl.SelectedTab = EmployeeChoice
+                            If accType = "employeeLogin" Then
+                                TabControl.SelectedTab = EmployeeChoice
+                            Else
+                                ManagerForm.Show()
+                                Me.Hide()
+                            End If
                         End If
                         loginSuccess()
                     Else
@@ -62,7 +75,7 @@ Public Class LogIn_Form
                 Finally
                     conn.Close()
                 End Try
-            ElseIf cbLoginType.SelectedIndex = 1 Then
+            Else
                 If txtUserNameLogin.Text = "Admin" And txtPassword1.Text = "Admiiin123!" Then
                     loginSuccess()
                     AdminForm.Show()
@@ -70,44 +83,6 @@ Public Class LogIn_Form
                 Else
                     loginFailed()
                 End If
-            Else
-                Try
-                    da = New OleDbDataAdapter("Select * from managerLogin where Status='" & "Active" & "' and USERNAME='" & txtUserNameLogin.Text & "' and PASSWORD='" & txtPassword1.Text & "'", conn)
-                    dset = New DataSet
-                    da.Fill(dset, "managerLogin")
-
-                    If dset.Tables("managerLogin").Rows.Count = 1 Then
-                        Dim cmd As New OleDbCommand("Select * from managerLogin where USERNAME=@USERNAME", conn)
-                        cmd.Parameters.AddWithValue("USERNAME", txtUserNameLogin.Text.Trim)
-                        Dim myreader As OleDbDataReader
-                        myreader = cmd.ExecuteReader
-                        If myreader.Read() Then
-                            FName = myreader("FirstName").ToString
-                            LName = myreader("LastName").ToString
-                        Else
-                            MessageBox.Show("No records found.", "ERROR")
-                        End If
-                        If txtPassword1.Text = "tempPass123!" Then
-                            txtPassword1.Clear()
-                            txtUsernameCreate.Text = txtUserNameLogin.Text
-                            TabControl.SelectedTab = tabSetNewPass
-                            txtAccountType.Text = cbLoginType.Text
-                            loginSuccess()
-                        Else
-                            ManagerForm.Show()
-                            Me.Hide()
-                        End If
-                        loginSuccess()
-                    Else
-                        loginFailed()
-                    End If
-                Catch ex As Exception
-                    dbFailed()
-                    MessageBox.Show("An error occurred: " & ex.Message)
-                Finally
-                    conn.Close()
-                End Try
-                ManagerForm.loadDetailss()
             End If
         End If
         FullName = FName & " " & LName
@@ -122,6 +97,25 @@ Public Class LogIn_Form
             btnPassword1.BackgroundImage = Global.Software_Design.My.Resources.Resources.hide
         End If
     End Sub
+    Private Sub btnShowPass2_Click(sender As Object, e As EventArgs) Handles btnPassword2.Click
+        If txtPassword2.UseSystemPasswordChar = True Then
+            txtPassword2.UseSystemPasswordChar = False
+            btnPassword2.BackgroundImage = Global.Software_Design.My.Resources.Resources.show
+        Else
+            txtPassword2.UseSystemPasswordChar = True
+            btnPassword2.BackgroundImage = Global.Software_Design.My.Resources.Resources.hide
+        End If
+    End Sub
+    Private Sub btnShowPass3_Click(sender As Object, e As EventArgs) Handles btnPassword3.Click
+        If txtPassword3.UseSystemPasswordChar = True Then
+            txtPassword3.UseSystemPasswordChar = False
+            btnPassword3.BackgroundImage = Global.Software_Design.My.Resources.Resources.show
+        Else
+            txtPassword3.UseSystemPasswordChar = True
+            btnPassword3.BackgroundImage = Global.Software_Design.My.Resources.Resources.hide
+        End If
+    End Sub
+
 
     Private Sub Guna2Button1_Click_1(sender As Object, e As EventArgs) Handles btnBackToLogin.Click
         TabControl.SelectedTab = LogInForm

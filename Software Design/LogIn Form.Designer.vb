@@ -58,15 +58,15 @@ Partial Class LogIn_Form
         Me.Guna2Button1 = New Guna.UI2.WinForms.Guna2Button()
         Me.btnUpdatePassword = New Guna.UI2.WinForms.Guna2Button()
         Me.requestPassword = New System.Windows.Forms.TabPage()
-        Me.btnCancenRequest = New Guna.UI2.WinForms.Guna2Button()
-        Me.btnRequest = New Guna.UI2.WinForms.Guna2Button()
+        Me.Label10 = New System.Windows.Forms.Label()
         Me.Label5 = New System.Windows.Forms.Label()
         Me.cbAccountTypeRequest = New Guna.UI2.WinForms.Guna2ComboBox()
         Me.Label15 = New System.Windows.Forms.Label()
         Me.dtpBdayRequest = New Guna.UI2.WinForms.Guna2DateTimePicker()
         Me.txtUsernameRequest = New Guna.UI2.WinForms.Guna2TextBox()
         Me.Label9 = New System.Windows.Forms.Label()
-        Me.Label10 = New System.Windows.Forms.Label()
+        Me.btnCancenRequest = New Guna.UI2.WinForms.Guna2Button()
+        Me.btnRequest = New Guna.UI2.WinForms.Guna2Button()
         Me.TabControl.SuspendLayout()
         Me.LogInForm.SuspendLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -671,41 +671,17 @@ Partial Class LogIn_Form
         Me.requestPassword.Text = "RequestPassword"
         Me.requestPassword.UseVisualStyleBackColor = True
         '
-        'btnCancenRequest
+        'Label10
         '
-        Me.btnCancenRequest.AutoRoundedCorners = True
-        Me.btnCancenRequest.BorderRadius = 16
-        Me.btnCancenRequest.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.btnCancenRequest.DisabledState.BorderColor = System.Drawing.Color.DarkGray
-        Me.btnCancenRequest.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray
-        Me.btnCancenRequest.DisabledState.FillColor = System.Drawing.Color.FromArgb(CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer))
-        Me.btnCancenRequest.DisabledState.ForeColor = System.Drawing.Color.FromArgb(CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer))
-        Me.btnCancenRequest.FillColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
-        Me.btnCancenRequest.Font = New System.Drawing.Font("Century Gothic", 14.25!)
-        Me.btnCancenRequest.ForeColor = System.Drawing.Color.White
-        Me.btnCancenRequest.Location = New System.Drawing.Point(239, 436)
-        Me.btnCancenRequest.Name = "btnCancenRequest"
-        Me.btnCancenRequest.Size = New System.Drawing.Size(153, 35)
-        Me.btnCancenRequest.TabIndex = 3
-        Me.btnCancenRequest.Text = "Cancel"
-        '
-        'btnRequest
-        '
-        Me.btnRequest.AutoRoundedCorners = True
-        Me.btnRequest.BorderRadius = 16
-        Me.btnRequest.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.btnRequest.DisabledState.BorderColor = System.Drawing.Color.DarkGray
-        Me.btnRequest.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray
-        Me.btnRequest.DisabledState.FillColor = System.Drawing.Color.FromArgb(CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer))
-        Me.btnRequest.DisabledState.ForeColor = System.Drawing.Color.FromArgb(CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer))
-        Me.btnRequest.FillColor = System.Drawing.Color.FromArgb(CType(CType(225, Byte), Integer), CType(CType(197, Byte), Integer), CType(CType(180, Byte), Integer))
-        Me.btnRequest.Font = New System.Drawing.Font("Century Gothic", 14.25!)
-        Me.btnRequest.ForeColor = System.Drawing.Color.FromArgb(CType(CType(113, Byte), Integer), CType(CType(93, Byte), Integer), CType(CType(90, Byte), Integer))
-        Me.btnRequest.Location = New System.Drawing.Point(74, 436)
-        Me.btnRequest.Name = "btnRequest"
-        Me.btnRequest.Size = New System.Drawing.Size(153, 35)
-        Me.btnRequest.TabIndex = 2
-        Me.btnRequest.Text = "Request"
+        Me.Label10.AutoSize = True
+        Me.Label10.Font = New System.Drawing.Font("Century Gothic", 14.25!, System.Drawing.FontStyle.Bold)
+        Me.Label10.ForeColor = System.Drawing.Color.FromArgb(CType(CType(113, Byte), Integer), CType(CType(93, Byte), Integer), CType(CType(90, Byte), Integer))
+        Me.Label10.Location = New System.Drawing.Point(100, 90)
+        Me.Label10.Margin = New System.Windows.Forms.Padding(2, 0, 2, 0)
+        Me.Label10.Name = "Label10"
+        Me.Label10.Size = New System.Drawing.Size(249, 23)
+        Me.Label10.TabIndex = 52
+        Me.Label10.Text = "REQUEST PASSWORD RESET"
         '
         'Label5
         '
@@ -812,17 +788,41 @@ Partial Class LogIn_Form
         Me.Label9.TabIndex = 46
         Me.Label9.Text = "Username:"
         '
-        'Label10
+        'btnCancenRequest
         '
-        Me.Label10.AutoSize = True
-        Me.Label10.Font = New System.Drawing.Font("Century Gothic", 14.25!, System.Drawing.FontStyle.Bold)
-        Me.Label10.ForeColor = System.Drawing.Color.FromArgb(CType(CType(113, Byte), Integer), CType(CType(93, Byte), Integer), CType(CType(90, Byte), Integer))
-        Me.Label10.Location = New System.Drawing.Point(100, 90)
-        Me.Label10.Margin = New System.Windows.Forms.Padding(2, 0, 2, 0)
-        Me.Label10.Name = "Label10"
-        Me.Label10.Size = New System.Drawing.Size(249, 23)
-        Me.Label10.TabIndex = 52
-        Me.Label10.Text = "REQUEST PASSWORD RESET"
+        Me.btnCancenRequest.AutoRoundedCorners = True
+        Me.btnCancenRequest.BorderRadius = 16
+        Me.btnCancenRequest.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.btnCancenRequest.DisabledState.BorderColor = System.Drawing.Color.DarkGray
+        Me.btnCancenRequest.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray
+        Me.btnCancenRequest.DisabledState.FillColor = System.Drawing.Color.FromArgb(CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer))
+        Me.btnCancenRequest.DisabledState.ForeColor = System.Drawing.Color.FromArgb(CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer))
+        Me.btnCancenRequest.FillColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
+        Me.btnCancenRequest.Font = New System.Drawing.Font("Century Gothic", 14.25!)
+        Me.btnCancenRequest.ForeColor = System.Drawing.Color.White
+        Me.btnCancenRequest.Location = New System.Drawing.Point(239, 436)
+        Me.btnCancenRequest.Name = "btnCancenRequest"
+        Me.btnCancenRequest.Size = New System.Drawing.Size(153, 35)
+        Me.btnCancenRequest.TabIndex = 3
+        Me.btnCancenRequest.Text = "Cancel"
+        '
+        'btnRequest
+        '
+        Me.btnRequest.AutoRoundedCorners = True
+        Me.btnRequest.BorderRadius = 16
+        Me.btnRequest.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.btnRequest.DisabledState.BorderColor = System.Drawing.Color.DarkGray
+        Me.btnRequest.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray
+        Me.btnRequest.DisabledState.FillColor = System.Drawing.Color.FromArgb(CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer))
+        Me.btnRequest.DisabledState.ForeColor = System.Drawing.Color.FromArgb(CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer))
+        Me.btnRequest.FillColor = System.Drawing.Color.FromArgb(CType(CType(225, Byte), Integer), CType(CType(197, Byte), Integer), CType(CType(180, Byte), Integer))
+        Me.btnRequest.Font = New System.Drawing.Font("Century Gothic", 14.25!)
+        Me.btnRequest.ForeColor = System.Drawing.Color.FromArgb(CType(CType(113, Byte), Integer), CType(CType(93, Byte), Integer), CType(CType(90, Byte), Integer))
+        Me.btnRequest.Location = New System.Drawing.Point(74, 436)
+        Me.btnRequest.Name = "btnRequest"
+        Me.btnRequest.Size = New System.Drawing.Size(153, 35)
+        Me.btnRequest.TabIndex = 2
+        Me.btnRequest.Text = "Request"
         '
         'LogIn_Form
         '
