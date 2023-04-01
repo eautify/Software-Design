@@ -161,55 +161,30 @@ Public Class AdminForm
 
     Private Sub Guna2Button2_Click(sender As Object, e As EventArgs) Handles btnDelete.Click
         If InputBox("To confirm the deletion of the account, please provide the password for the administrator account.", "Delete Account") = "Admiiin123!" Then
-            If cbAccountTypeDelete.SelectedIndex = 0 Then
-                Try
-                    da = New OleDbDataAdapter("Select * from employeeLogin where Status='" & "Active" & "' and USERNAME='" & txtUsernameDelete.Text & "' and BDAY='" & dtpBDAYDelete.Text & "'", conn)
-                    dset = New DataSet
-                    da.Fill(dset, "employeeLogin")
-                    If dset.Tables("employeeLogin").Rows.Count = 1 Then
-                        connect()
-                        Dim sql As String = "UPDATE employeeLogin SET [Status]=@Status WHERE [USERNAME]=@USERNAME"
-                        Dim cmd As New OleDbCommand(sql, conn)
-                        cmd.Parameters.AddWithValue("@Status", "Inactive")
-                        cmd.Parameters.AddWithValue("@USERNAME", txtUsernameReset.Text)
-                        cmd.ExecuteNonQuery()
-                        MessageBox.Show("The account " & txtUsernameDelete.Text & " has been deleted successfully.", "Account deleted!", MessageBoxButtons.OK, MessageBoxIcon.Information)
-                        txtUsernameDelete.Clear()
-                        cbAccountTypeDelete.SelectedIndex = 0
-                    Else
-                        noRecords()
-                    End If
-                Catch ex As Exception
-                    dbFailed()
-                    MessageBox.Show("An error occurred: " & ex.Message, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error)
-                Finally
-                    conn.Close()
-                End Try
-            Else
-                Try
-                    da = New OleDbDataAdapter("Select * from managerLogin where Status='" & "Active" & "' and USERNAME='" & txtUsernameDelete.Text & "' and BDAY='" & dtpBDAYDelete.Text & "'", conn)
-                    dset = New DataSet
-                    da.Fill(dset, "managerLogin")
-                    If dset.Tables("managerLogin").Rows.Count = 1 Then
-                        connect()
-                        Dim sql As String = "UPDATE managerLogin SET [Status]=@Status WHERE [USERNAME]=@USERNAME"
-                        Dim cmd As New OleDbCommand(sql, conn)
-                        cmd.Parameters.Add("@Status", OleDbType.VarChar).Value = "Inactive!"
-                        cmd.Parameters.Add("@USERNAME", OleDbType.VarChar).Value = txtUsernameReset.Text
-                        cmd.ExecuteNonQuery()
-                        MessageBox.Show("The account " & txtUsernameDelete.Text & " has been deleted successfully.", "Account deleted!", MessageBoxButtons.OK, MessageBoxIcon.Information)
-                        txtUsernameDelete.Clear()
-                        cbAccountTypeDelete.SelectedIndex = 0
-                    Else
-                        noRecords()
-                    End If
-                Catch ex As Exception
-                    dbFailed()
-                    MessageBox.Show("An error occurred: " & ex.Message, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error)
-                Finally
-                    conn.Close()
-                End Try
-            End If
+            Dim accountType As String = IIf(cbAccountTypeDelete.SelectedIndex = 0, "employeeLogin", "managerLogin")
+            Try
+                da = New OleDbDataAdapter("Select * from " & accountType & " where Status='" & "Active" & "' and USERNAME='" & txtUsernameDelete.Text & "' and BDAY='" & dtpBDAYDelete.Text & "'", conn)
+                dset = New DataSet
+                da.Fill(dset, accountType)
+                If dset.Tables(accountType).Rows.Count = 1 Then
+                    connect()
+                    Dim sql As String = "UPDATE " & accountType & " SET [Status]=@Status WHERE [USERNAME]=@USERNAME"
+                    Dim cmd As New OleDbCommand(sql, conn)
+                    cmd.Parameters.AddWithValue("@Status", "Inactive")
+                    cmd.Parameters.AddWithValue("@USERNAME", txtUsernameReset.Text)
+                    cmd.ExecuteNonQuery()
+                    MessageBox.Show("The account " & txtUsernameDelete.Text & " has been deleted successfully.", "Account deleted!", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    txtUsernameDelete.Clear()
+                    cbAccountTypeDelete.SelectedIndex = 0
+                Else
+                    noRecords()
+                End If
+            Catch ex As Exception
+                dbFailed()
+                MessageBox.Show("An error occurred: " & ex.Message, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Finally
+                conn.Close()
+            End Try
         End If
     End Sub
 
@@ -224,6 +199,7 @@ Public Class AdminForm
     End Sub
 
     Private Sub AdminForm_Load(sender As Object, e As EventArgs) Handles Me.Load
+        loginSuccess()
         loadData()
     End Sub
 

@@ -77,6 +77,7 @@ Public Class ManagerForm
     End Sub
 
     Private Sub ManagerForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        loginSuccess()
         Try
             Dim cmd As New OleDbCommand("Select TicketNumber from tblTransactionHistory", conn)
             Dim da As New OleDbDataAdapter(cmd)

@@ -65,7 +65,6 @@ Public Class LogIn_Form
                                 Me.Hide()
                             End If
                         End If
-                        loginSuccess()
                     Else
                         loginFailed()
                     End If
@@ -77,7 +76,6 @@ Public Class LogIn_Form
                 End Try
             Else
                 If txtUserNameLogin.Text = "Admin" And txtPassword1.Text = "Admiiin123!" Then
-                    loginSuccess()
                     AdminForm.Show()
                     Me.Hide()
                 Else
@@ -147,52 +145,47 @@ Public Class LogIn_Form
         TabControl.SelectedTab = LogInForm
     End Sub
 
-    Private Sub Guna2Button2_Click_1(sender As Object, e As EventArgs) Handles btnUpdatePassword.Click
-        If txtPassword2.Text = Nothing Or txtPassword3.Text = Nothing Then
+    Private Sub btnUpdatePassword_Click(sender As Object, e As EventArgs) Handles btnUpdatePassword.Click
+        If txtPassword2.Text = "" Or txtPassword3.Text = "" Then
             updateFailed()
-        Else
-            If txtPassword2.Text <> txtPassword3.Text Then
-                MessageBox.Show("Password mismatch.", "Create Account Failed!", MessageBoxButtons.OK, MessageBoxIcon.Error)
-            Else
-                If (ValidatePassword(txtPassword2.Text) = False) Or (txtPassword2.Text.Length < 8) Then
-                    MessageBox.Show("Password must contain" & vbCrLf & vbCrLf & "- Upper and lowercase letters" & vbCrLf & "- Numbers" & vbCrLf & "- Symbols/SpecialCharacters" & vbCrLf & "- With minimum 8 characters", "Password Requiremetns", MessageBoxButtons.OK, MessageBoxIcon.Information)
-                Else
-                    Try
-                        If txtAccountType.Text = "Employee" Then
-                            Dim sql As String = "UPDATE employeeLogin SET [PASSWORD]=@PASSWORD WHERE [USERNAME]=@USERNAME"
-
-                            Dim cmd As New OleDbCommand(sql, conn)
-                            cmd.Parameters.Add("@PASSWORD", OleDbType.VarChar).Value = txtPassword2.Text
-                            cmd.Parameters.Add("@USERNAME", OleDbType.VarChar).Value = txtUsernameCreate.Text
-
-                            connect()
-                            cmd.ExecuteNonQuery()
-                            conn.Close()
-                            updateSuccess()
-                            TabControl.SelectedTab = LogInForm
-                        Else
-                            Dim sql As String = "UPDATE managerLogin SET [PASSWORD]=@PASSWORD WHERE [USERNAME]=@USERNAME"
-
-                            Dim cmd As New OleDbCommand(sql, conn)
-                            cmd.Parameters.Add("@PASSWORD", OleDbType.VarChar).Value = txtPassword2.Text
-                            cmd.Parameters.Add("@USERNAME", OleDbType.VarChar).Value = txtUsernameCreate.Text
-
-                            connect()
-                            cmd.ExecuteNonQuery()
-                            conn.Close()
-                            updateSuccess()
-                            TabControl.SelectedTab = LogInForm
-                        End If
-                    Catch ex As Exception
-                        dbFailed()
-                        MessageBox.Show("An error occurred: " & ex.Message)
-                    Finally
-                        conn.Close()
-                    End Try
-                End If
-            End If
+            Exit Sub
         End If
+
+        If txtPassword2.Text <> txtPassword3.Text Then
+            MessageBox.Show("Password mismatch.", "Create Account Failed!", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Exit Sub
+        End If
+
+        If (ValidatePassword(txtPassword2.Text) = False) Or (txtPassword2.Text.Length < 8) Then
+            MessageBox.Show("Password must contain" & vbCrLf & vbCrLf & "- Upper and lowercase letters" & vbCrLf & "- Numbers" & vbCrLf & "- Symbols/SpecialCharacters" & vbCrLf & "- With minimum 8 characters", "Password Requirements", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            Exit Sub
+        End If
+
+        Dim sql As String = ""
+        If txtAccountType.Text = "Employee" Then
+            sql = "UPDATE employeeLogin SET [PASSWORD]=@PASSWORD WHERE [USERNAME]=@USERNAME"
+        Else
+            sql = "UPDATE managerLogin SET [PASSWORD]=@PASSWORD WHERE [USERNAME]=@USERNAME"
+        End If
+
+        Try
+            Dim cmd As New OleDbCommand(sql, conn)
+            cmd.Parameters.Add("@PASSWORD", OleDbType.VarChar).Value = txtPassword2.Text
+            cmd.Parameters.Add("@USERNAME", OleDbType.VarChar).Value = txtUsernameCreate.Text
+
+            connect()
+            cmd.ExecuteNonQuery()
+            conn.Close()
+            updateSuccess()
+            TabControl.SelectedTab = LogInForm
+        Catch ex As Exception
+            dbFailed()
+            MessageBox.Show("An error occurred: " & ex.Message)
+        Finally
+            conn.Close()
+        End Try
     End Sub
+
 
     Private Sub linkForgotPassword_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles linkForgotPassword.LinkClicked
         TabControl.SelectedTab = requestPassword

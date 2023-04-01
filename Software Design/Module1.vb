@@ -78,4 +78,6 @@ Module Module1
         ValidatePassword = regEx.Test(Password)
         regEx = Nothing
     End Function
+
+
 End Module

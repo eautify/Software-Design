@@ -41,32 +41,14 @@ Public Class MainForm
     End Sub
 
     Private Sub MainForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        loginSuccess()
         Try
-            Dim cmd As New OleDbCommand("Select TicketNumber from tblVehicleList", conn)
-            Dim da As New OleDbDataAdapter(cmd)
-            Dim dt As New DataSet
-            da.Fill(dt)
-            Dim coloumn1 As New AutoCompleteStringCollection
-            Dim i As Integer
-            For i = 0 To dt.Tables(0).Rows.Count - 1
-                coloumn1.Add(dt.Tables(0).Rows(i)("TicketNumber").ToString())
-            Next
-            txtTicketNumberExit.AutoCompleteSource = AutoCompleteSource.CustomSource
-            txtTicketNumberExit.AutoCompleteCustomSource = coloumn1
-            txtTicketNumberExit.AutoCompleteMode = AutoCompleteMode.Suggest
-
             Dim columnName As String = "ID"
             Dim query As String = String.Format("SELECT MAX({0}) AS MaxValue FROM ticketNumbers;", columnName)
             connect()
             Dim command As New OleDbCommand(query, conn)
             Dim maxValueObject As Object = command.ExecuteScalar()
-            conn.Close()
-            If maxValueObject Is DBNull.Value Then
-                Serial = 0
-            Else
-                Serial = CInt(maxValueObject)
-            End If
-
+            If maxValueObject Is DBNull.Value Then Serial = 0 Else Serial = CInt(maxValueObject)
         Catch ex As Exception
             dbFailed()
             MessageBox.Show("An error occurred: " & ex.Message)
@@ -94,7 +76,9 @@ Public Class MainForm
         populate()
         GetAvailability()
         loadDetails()
+        PopulateComboBox()
     End Sub
+
 
     Private Sub cbFloor_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbFloor.SelectedIndexChanged
         If cbVehicleType.SelectedIndex = 0 And cbFloor.SelectedIndex = 0 Then
@@ -149,85 +133,92 @@ Public Class MainForm
     End Function
 
     Sub createTicket()
-        cbVehicleType.Enabled = False
-        txtPlateNumber.Enabled = False
-        cbParkingLocation.Enabled = False
+        For Each c As Control In {cbVehicleType, txtPlateNumber, cbParkingLocation}
+            c.Enabled = False
+        Next
 
         btnCreateTicket.Enabled = False
         btnPrintTicket.Enabled = True
         btnReset.Enabled = False
 
-        Dim commList As OleDbCommand
-        Dim commLog As OleDbCommand
-        Dim commTix As OleDbCommand
         connect()
-        commList = New OleDbCommand
-        commLog = New OleDbCommand
-        commTix = New OleDbCommand
-        commList.Connection = conn
-        commLog.Connection = conn
-        commTix.Connection = conn
-        commList.CommandText = "Insert into tblVehicleList values('" & cbFloor.Text & "','" & cbParkingLocation.Text & "', '" & txtTicketNumber.Text & "', '" & txtPlateNumber.Text & "', '" & cbVehicleType.Text & "', '" & Format(Now, "MM/dd/yy hh:mm tt") & "')"
-        commLog.CommandText = "Insert into tblParkingActivity values('" & txtTicketNumber.Text & "','" & txtPlateNumber.Text & "','" & cbVehicleType.Text & "','" & cbParkingLocation.Text & "','" & Format(Now, "MM/dd/yy hh:mm tt") & "','" & "Vehicle entered." & "')"
-        commTix.CommandText = "Insert into ticketNumbers values('" & Serial & "', '" & txtTicketNumber.Text & "')"
-        commList.ExecuteNonQuery()
-        commLog.ExecuteNonQuery()
-        commTix.ExecuteNonQuery()
+        Dim cmd As New OleDbCommand("Insert into tblVehicleList values(@floor, @location, @ticket, @plate, @type, @datetime)", conn)
+        cmd.Parameters.AddWithValue("@floor", cbFloor.Text)
+        cmd.Parameters.AddWithValue("@location", cbParkingLocation.Text)
+        cmd.Parameters.AddWithValue("@ticket", txtTicketNumber.Text)
+        cmd.Parameters.AddWithValue("@plate", txtPlateNumber.Text)
+        cmd.Parameters.AddWithValue("@type", cbVehicleType.Text)
+        cmd.Parameters.AddWithValue("@datetime", Format(Now, "MM/dd/yy hh:mm tt"))
+        cmd.ExecuteNonQuery()
+
+        cmd = New OleDbCommand("Insert into tblParkingActivity values(@ticket, @plate, @type, @location, @datetime, @entry)", conn)
+        cmd.Parameters.AddWithValue("@ticket", txtTicketNumber.Text)
+        cmd.Parameters.AddWithValue("@plate", txtPlateNumber.Text)
+        cmd.Parameters.AddWithValue("@type", cbVehicleType.Text)
+        cmd.Parameters.AddWithValue("@location", cbParkingLocation.Text)
+        cmd.Parameters.AddWithValue("@datetime", Format(Now, "MM/dd/yy hh:mm tt"))
+        cmd.Parameters.AddWithValue("@entry", "Vehicle entered.")
+        cmd.ExecuteNonQuery()
+
+        cmd = New OleDbCommand("Insert into ticketNumbers values(@serial, @ticket)", conn)
+        cmd.Parameters.AddWithValue("@serial", Serial)
+        cmd.Parameters.AddWithValue("@ticket", txtTicketNumber.Text)
+        cmd.ExecuteNonQuery()
+
         populate()
         conn.Close()
     End Sub
 
+
     Private Sub btnCreateTicket_Click(sender As Object, e As EventArgs) Handles btnCreateTicket.Click
-        If txtPlateNumber.Text = Nothing Or cbParkingLocation.Text = Nothing Or cbVehicleType.Text = Nothing Or cbFloor.Text = Nothing Then
+        If String.IsNullOrEmpty(txtPlateNumber.Text) OrElse String.IsNullOrEmpty(cbParkingLocation.Text) OrElse String.IsNullOrEmpty(cbVehicleType.Text) OrElse String.IsNullOrEmpty(cbFloor.Text) Then
             MsgBox("Vehicle information can't be incomplete.", vbInformation, "Invalid Entry")
-        Else
-            If (txtPlateNumber.TextLength < 4) Then
-                MsgBox("That is an invalid plate number.", vbInformation, "Invalid Plate Number")
-                txtPlateNumber.Clear()
-                txtPlateNumber.Focus()
-            Else
-                Try
-                    da = New OleDbDataAdapter("Select * from tblVehicleList where ParkingLocation='" & cbParkingLocation.Text & "'", conn)
-                    dset = New DataSet
-                    da.Fill(dset, "tblVehicleList")
-                    If dset.Tables("tblVehicleList").Rows.Count > 0 Then
-                        MsgBox("Parking lot is occupied.", vbInformation, "Parking Failed!")
-                        cbParkingLocation.SelectedIndex = -1
-                    Else
-                        If MsgBox("Confrim parking?", vbYesNo + vbQuestion, "Confirm") = vbYes Then
-                            Serial += 1
-                            If cbVehicleType.SelectedIndex = 0 Then
-                                If avail2WheelLots = 0 Then
-                                    MsgBox("Parking lots for 2 wheels vehicle are full.", vbInformation, "Parking lot full")
-                                Else
-                                    avail2WheelLots = avail2WheelLots - 1
-                                    txtTicketNumber.Text = cbParkingLocation.Text & Serial.ToString("000")
-                                    rate = vehicle2Wheels
-                                    createTicket()
-                                End If
-                            Else
-                                If avail4WheelLots = 0 Then
-                                    MsgBox("Parking lots for 4 wheels vehicle are full.", vbInformation, "Parking lot full")
-                                Else
-                                    avail4WheelLots = avail4WheelLots - 1
-                                    txtTicketNumber.Text = cbParkingLocation.Text & Serial.ToString("000")
-                                    rate = vehicle4Wheels
-                                    createTicket()
-                                End If
-                            End If
-                        End If
-                    End If
-                Catch ex As Exception
-                    dbFailed()
-                    MessageBox.Show("An error occurred: " & ex.Message)
-                Finally
-                    conn.Close()
-                End Try
-            End If
+            Return
         End If
+
+        If txtPlateNumber.TextLength < 4 Then
+            MsgBox("That is an invalid plate number.", vbInformation, "Invalid Plate Number")
+            txtPlateNumber.Clear()
+            txtPlateNumber.Focus()
+            Return
+        End If
+
+        Try
+            da = New OleDbDataAdapter("Select * from tblVehicleList where ParkingLocation='" & cbParkingLocation.Text & "'", conn)
+            dset = New DataSet
+            da.Fill(dset, "tblVehicleList")
+
+            If dset.Tables("tblVehicleList").Rows.Count > 0 Then
+                MsgBox("Parking lot is occupied.", vbInformation, "Parking Failed!")
+                cbParkingLocation.SelectedIndex = -1
+                Return
+            End If
+
+            If MsgBox("Confirm parking?", vbYesNo + vbQuestion, "Confirm") = vbYes Then
+                Serial += 1
+                Dim availLots As Integer = If(cbVehicleType.SelectedIndex = 0, avail2WheelLots, avail4WheelLots)
+
+                If availLots = 0 Then
+                    MsgBox("Parking lots for " & cbVehicleType.Text & " vehicles are full.", vbInformation, "Parking lot full")
+                    Return
+                End If
+
+                availLots -= 1
+                txtTicketNumber.Text = cbParkingLocation.Text & Serial.ToString("000")
+                rate = If(cbVehicleType.SelectedIndex = 0, vehicle2Wheels, vehicle4Wheels)
+                createTicket()
+            End If
+        Catch ex As Exception
+            dbFailed()
+            MessageBox.Show("An error occurred: " & ex.Message)
+        Finally
+            conn.Close()
+        End Try
+
         loadDetails()
         GetAvailability()
     End Sub
+
 
     Private Sub btnReset_Click(sender As Object, e As EventArgs) Handles btnReset.Click
         If cbVehicleType.SelectedIndex = 0 Then
@@ -339,68 +330,7 @@ and regulations of the parking area.", f5, Brushes.Black, 20, 215)
     Private Sub Guna2Button5_Click(sender As Object, e As EventArgs) Handles btnValidate.Click
         Try
             connect()
-            Dim cmd As New OleDbCommand("Select * from tblVehicleList where TicketNumber=@TicketNumber", conn)
-            cmd.Parameters.AddWithValue("TicketNumber", txtTicketNumberExit.Text.Trim)
-            Dim myreader As OleDbDataReader
-            myreader = cmd.ExecuteReader
-            If myreader.Read() Then
-                Type = myreader("VehicleType")
-                plateNumberPlaceholder = myreader("PlateNumber")
-                exitPL = myreader("ParkingLocation")
-                TimeIn = myreader("TimeIn")
-                parkingLocation = myreader("ParkingLocation")
-                parkingFloor = myreader("Floor")
-
-                Dim formatTime As String = "MM/dd/yy hh:mm tt"
-                Dim startDate As Date = Date.ParseExact(TimeIn, formatTime, Nothing)
-                Dim endDate As Date = Date.ParseExact(Format(Now, "MM/dd/yy hh:mm tt"), formatTime, Nothing)
-                Dim timeDiff As TimeSpan = endDate - startDate
-
-                'hourDiff = Math.Round(timeDiff.TotalHours, 2)
-                hourDiff = Math.Ceiling(timeDiff.TotalHours)
-                txtDuration.Text = hourDiff.ToString() & " Hour/s."
-
-                Dim x As Double
-                If hourDiff < freeHours Then
-                    x = 0
-                Else
-                    x = hourDiff - freeHours
-                End If
-
-                If Type = "2 Wheels" Then
-                    ParkingFee = vehicle2Wheels
-                Else
-                    ParkingFee = vehicle4Wheels
-                End If
-                txtParkingFee.Text = "P " & Format(ParkingFee, "0.00")
-
-                y = x * feesPerHours
-
-                txtComputed.Text = "P " & Format(y, "0.00")
-
-                SubTotal = ParkingFee + y
-
-
-                txtSubTotal.Text = "P " & Format(SubTotal, "0.00")
-
-                If cbDiscount.Text = "Student (" & FormatPercent(studentDisc) & ")" Then
-                    discount = studentDisc
-                ElseIf cbDiscount.Text = "PWD and Senior Citizen (" & FormatPercent(pwdNseniorDisc) & ")" Then
-                    discount = pwdNseniorDisc
-                Else
-                    discount = 0
-                End If
-                TotalDiscount = ParkingFee * discount
-                txtDiscount.Text = "-P " & Format(TotalDiscount, "0.00")
-                amountTopay = SubTotal - TotalDiscount
-                txtTotal.Text = "P " & Format(amountTopay, "0.00")
-
-                txtAmountTendered.Enabled = True
-                btnPay.Enabled = True
-            Else
-                MessageBox.Show("No ticket number found.", "Invalid Input")
-                txtTicketNumber.Clear()
-            End If
+            LoadTicketInfo()
         Catch ex As Exception
             dbFailed()
             MessageBox.Show("An error occurred: " & ex.Message)
@@ -409,52 +339,137 @@ and regulations of the parking area.", f5, Brushes.Black, 20, 215)
         End Try
     End Sub
 
+    Private Sub LoadTicketInfo()
+        Dim cmd As New OleDbCommand("Select * from tblVehicleList where TicketNumber=@TicketNumber", conn)
+        cmd.Parameters.AddWithValue("TicketNumber", cmbMyField.Text.Trim)
+        Dim myreader As OleDbDataReader
+        myreader = cmd.ExecuteReader
+        If myreader.Read() Then
+            Type = myreader("VehicleType")
+            plateNumberPlaceholder = myreader("PlateNumber")
+            exitPL = myreader("ParkingLocation")
+            TimeIn = myreader("TimeIn")
+            parkingLocation = myreader("ParkingLocation")
+            parkingFloor = myreader("Floor")
+
+            Dim formatTime As String = "MM/dd/yy hh:mm tt"
+            Dim startDate As Date = Date.ParseExact(TimeIn, formatTime, Nothing)
+            Dim endDate As Date = Date.ParseExact(Format(Now, "MM/dd/yy hh:mm tt"), formatTime, Nothing)
+            Dim timeDiff As TimeSpan = endDate - startDate
+
+            hourDiff = Math.Ceiling(timeDiff.TotalHours)
+            txtDuration.Text = hourDiff.ToString() & " Hour/s."
+
+            Dim x As Double
+            If hourDiff < freeHours Then
+                x = 0
+            Else
+                x = hourDiff - freeHours
+            End If
+
+            If Type = "2 Wheels" Then
+                ParkingFee = vehicle2Wheels
+            Else
+                ParkingFee = vehicle4Wheels
+            End If
+            txtParkingFee.Text = "P " & Format(ParkingFee, "0.00")
+
+            y = x * feesPerHours
+
+            txtComputed.Text = "P " & Format(y, "0.00")
+
+            SubTotal = ParkingFee + y
+
+
+            txtSubTotal.Text = "P " & Format(SubTotal, "0.00")
+
+            If cbDiscount.Text = "Student (" & FormatPercent(studentDisc) & ")" Then
+                discount = studentDisc
+            ElseIf cbDiscount.Text = "PWD and Senior Citizen (" & FormatPercent(pwdNseniorDisc) & ")" Then
+                discount = pwdNseniorDisc
+            Else
+                discount = 0
+            End If
+            TotalDiscount = ParkingFee * discount
+            txtDiscount.Text = "-P " & Format(TotalDiscount, "0.00")
+            amountTopay = SubTotal - TotalDiscount
+            txtTotal.Text = "P " & Format(amountTopay, "0.00")
+
+            txtAmountTendered.Enabled = True
+            btnPay.Enabled = True
+        Else
+            MessageBox.Show("No ticket number found.", "Invalid Input")
+            txtTicketNumber.Clear()
+        End If
+    End Sub
+
+
     Private Sub btnPay_Click(sender As Object, e As EventArgs) Handles btnPay.Click
-        If txtAmountTendered.Text = Nothing Then
+        If String.IsNullOrEmpty(txtAmountTendered.Text) Then
             MsgBox("Payment can not be empty.", vbInformation, "Invalid payment")
             txtAmountTendered.Focus()
-        Else
-            Dim amountTendered As Double
-            amountTendered = Double.Parse(txtAmountTendered.Text)
-            If amountTopay > amountTendered Then
-                MsgBox("Insuficient payment.", vbInformation, "Invalid Payment")
-            Else
-                change = Double.Parse(txtAmountTendered.Text) - amountTopay
-                txtChange.Text = "P " & Format(change, "0.00")
-
-                txtAmountTendered.ReadOnly = True
-                btnPay.Enabled = False
-                btnPrintReceipt.Enabled = True
-                btnValidate.Enabled = False
-
-                HideVehicle()
-
-                Try
-                    Dim commTrans As OleDbCommand
-                    connect()
-                    commTrans = New OleDbCommand
-                    commTrans.Connection = conn
-                    commTrans.CommandText = "Insert into tblTransactionHistory values('" & txtTicketNumberExit.Text & "','" & parkingLocation & "','" & parkingFloor & "','" & Type & "','" & plateNumberPlaceholder & "', '" & TimeIn & "', '" & Format(Now, "MM/dd/yy hh:mm tt") & "','" & hourDiff & "', '" & ParkingFee & "', '" & SubTotal & "', '" & TotalDiscount & "', '" & amountTopay & "', '" & amountTendered & "', '" & change & "', '" & Format(Now, "MM/dd/yy hh:mm tt") & "')"
-                    commTrans.ExecuteNonQuery()
-
-                    Dim commDelete As OleDbCommand
-                    commDelete = New OleDbCommand
-                    commDelete.Connection = conn
-                    commDelete.CommandText = "Delete from tblVehicleList where TicketNumber='" & txtTicketNumberExit.Text & "'"
-                    commDelete.ExecuteNonQuery()
-
-                    MsgBox("Payment success", vbInformation, "Payment success")
-
-                Catch ex As Exception
-                    dbFailed()
-                    MessageBox.Show("An error occurred: " & ex.Message)
-                Finally
-                    conn.Close()
-                End Try
-            End If
+            Return
         End If
+
+        Dim amountTendered As Double
+        If Not Double.TryParse(txtAmountTendered.Text, amountTendered) Then
+            MsgBox("Invalid payment amount.", vbInformation, "Invalid payment")
+            txtAmountTendered.Focus()
+            Return
+        End If
+
+        If amountTopay > amountTendered Then
+            MsgBox("Insuficient payment.", vbInformation, "Invalid Payment")
+            Return
+        End If
+
+        change = amountTendered - amountTopay
+        txtChange.Text = "P " & Format(change, "0.00")
+
+        txtAmountTendered.ReadOnly = True
+        btnPay.Enabled = False
+        btnPrintReceipt.Enabled = True
+        btnValidate.Enabled = False
+
+        HideVehicle()
+
+        Try
+            connect()
+            Using commTrans As New OleDbCommand("Insert into tblTransactionHistory values(@TicketNumber, @ParkingLocation, @ParkingFloor, @Type, @PlateNumber, @TimeIn, @TimeOut, @HourDiff, @ParkingFee, @SubTotal, @TotalDiscount, @AmountToPay, @AmountTendered, @Change, @TransactionDate)", conn)
+                commTrans.Parameters.AddWithValue("@TicketNumber", cmbMyField.Text)
+                commTrans.Parameters.AddWithValue("@ParkingLocation", parkingLocation)
+                commTrans.Parameters.AddWithValue("@ParkingFloor", parkingFloor)
+                commTrans.Parameters.AddWithValue("@Type", Type)
+                commTrans.Parameters.AddWithValue("@PlateNumber", plateNumberPlaceholder)
+                commTrans.Parameters.AddWithValue("@TimeIn", TimeIn)
+                commTrans.Parameters.AddWithValue("@TimeOut", Format(Now, "MM/dd/yy hh:mm tt"))
+                commTrans.Parameters.AddWithValue("@HourDiff", hourDiff)
+                commTrans.Parameters.AddWithValue("@ParkingFee", ParkingFee)
+                commTrans.Parameters.AddWithValue("@SubTotal", SubTotal)
+                commTrans.Parameters.AddWithValue("@TotalDiscount", TotalDiscount)
+                commTrans.Parameters.AddWithValue("@AmountToPay", amountTopay)
+                commTrans.Parameters.AddWithValue("@AmountTendered", amountTendered)
+                commTrans.Parameters.AddWithValue("@Change", change)
+                commTrans.Parameters.AddWithValue("@TransactionDate", Format(Now, "MM/dd/yy hh:mm tt"))
+                commTrans.ExecuteNonQuery()
+            End Using
+
+            Using commDelete As New OleDbCommand("Delete from tblVehicleList where TicketNumber=@TicketNumber", conn)
+                commDelete.Parameters.AddWithValue("@TicketNumber", cmbMyField.Text)
+                commDelete.ExecuteNonQuery()
+            End Using
+
+            MsgBox("Payment success", vbInformation, "Payment success")
+        Catch ex As Exception
+            dbFailed()
+            MessageBox.Show("An error occurred: " & ex.Message)
+        Finally
+            conn.Close()
+        End Try
+
         populate()
     End Sub
+
 
     Sub loadDetails()
         connect()
@@ -503,7 +518,7 @@ and regulations of the parking area.", f5, Brushes.Black, 20, 215)
         e.Graphics.DrawString("Entry Time: " + TimeIn, f5, Brushes.Black, 20, 110)
         e.Graphics.DrawString("Exit Time: " + Format(Now, "MM/dd/yy hh:mm tt"), f5, Brushes.Black, 20, 120)
         e.Graphics.DrawString("Duration: " + txtDuration.Text, f5, Brushes.Black, 20, 130)
-        e.Graphics.DrawString("Ticket Number: " + txtTicketNumberExit.Text, f5, Brushes.Black, 20, 140)
+        e.Graphics.DrawString("Ticket Number: " + cmbMyField.Text, f5, Brushes.Black, 20, 140)
 
         e.Graphics.DrawString("Base Rate: " + txtParkingFee.Text, f5, Brushes.Black, 20, 155)
         e.Graphics.DrawString("Additional fees per hour: P " + feesPerHours.ToString(), f5, Brushes.Black, 20, 165)
@@ -534,7 +549,7 @@ and regulations of the parking area.", f5, Brushes.Black, 20, 215)
     Private Sub btnNextExit_Click(sender As Object, e As EventArgs) Handles btnNextExit.Click
         MsgBox("Vehicle excited successfully. Ready to entertain next vehicle", vbInformation, "Exit Gate")
 
-        txtTicketNumberExit.Clear()
+        cmbMyField.SelectedIndex = -1
         txtDiscount.Clear()
         txtParkingFee.Clear()
         txtDuration.Clear()
@@ -553,7 +568,7 @@ and regulations of the parking area.", f5, Brushes.Black, 20, 215)
         txtAmountTendered.ReadOnly = False
     End Sub
 
-    Private Sub txtPlateNumber_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtPlateNumber.KeyPress, txtTicketNumberExit.KeyPress
+    Private Sub txtPlateNumber_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtPlateNumber.KeyPress
         e.KeyChar = UCase(e.KeyChar)
     End Sub
     Private Sub txtAmountTendered_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtAmountTendered.KeyPress
@@ -1174,5 +1189,26 @@ and regulations of the parking area.", f5, Brushes.Black, 20, 215)
         Finally
             conn.Close()
         End Try
+    End Sub
+
+    Private Sub PopulateComboBox()
+        Try
+            connect()
+            Dim sql As String = "SELECT TicketNumber FROM tblVehicleList"
+            Dim cmd As New OleDbCommand(sql, conn)
+            Dim reader As OleDbDataReader = cmd.ExecuteReader()
+            cmbMyField.Items.Clear()
+            While reader.Read()
+                cmbMyField.Items.Add(reader("TicketNumber").ToString())
+            End While
+        Catch ex As Exception
+            MessageBox.Show("An error occurred: " & ex.Message)
+        Finally
+            conn.Close()
+        End Try
+    End Sub
+
+    Private Sub cmbMyField_Click_1(sender As Object, e As EventArgs) Handles cmbMyField.Click
+        PopulateComboBox()
     End Sub
 End Class

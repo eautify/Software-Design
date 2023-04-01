@@ -205,6 +205,7 @@ Partial Class MainForm
         Me.Label1 = New System.Windows.Forms.Label()
         Me.tabExitNew = New System.Windows.Forms.TabPage()
         Me.Panel10 = New System.Windows.Forms.Panel()
+        Me.cmbMyField = New Guna.UI2.WinForms.Guna2ComboBox()
         Me.txtComputed = New Guna.UI2.WinForms.Guna2TextBox()
         Me.Label17 = New System.Windows.Forms.Label()
         Me.txtChange = New Guna.UI2.WinForms.Guna2TextBox()
@@ -225,7 +226,6 @@ Partial Class MainForm
         Me.Label8 = New System.Windows.Forms.Label()
         Me.Label7 = New System.Windows.Forms.Label()
         Me.btnValidate = New Guna.UI2.WinForms.Guna2Button()
-        Me.txtTicketNumberExit = New Guna.UI2.WinForms.Guna2TextBox()
         Me.Label5 = New System.Windows.Forms.Label()
         Me.cbDiscount = New Guna.UI2.WinForms.Guna2ComboBox()
         Me.Label6 = New System.Windows.Forms.Label()
@@ -2800,6 +2800,7 @@ Partial Class MainForm
         'Panel10
         '
         Me.Panel10.BackColor = System.Drawing.Color.FromArgb(CType(CType(244, Byte), Integer), CType(CType(238, Byte), Integer), CType(CType(233, Byte), Integer))
+        Me.Panel10.Controls.Add(Me.cmbMyField)
         Me.Panel10.Controls.Add(Me.txtComputed)
         Me.Panel10.Controls.Add(Me.Label17)
         Me.Panel10.Controls.Add(Me.txtChange)
@@ -2820,7 +2821,6 @@ Partial Class MainForm
         Me.Panel10.Controls.Add(Me.Label8)
         Me.Panel10.Controls.Add(Me.Label7)
         Me.Panel10.Controls.Add(Me.btnValidate)
-        Me.Panel10.Controls.Add(Me.txtTicketNumberExit)
         Me.Panel10.Controls.Add(Me.Label5)
         Me.Panel10.Controls.Add(Me.cbDiscount)
         Me.Panel10.Controls.Add(Me.Label6)
@@ -2829,6 +2829,27 @@ Partial Class MainForm
         Me.Panel10.Name = "Panel10"
         Me.Panel10.Size = New System.Drawing.Size(420, 647)
         Me.Panel10.TabIndex = 5
+        '
+        'cmbMyField
+        '
+        Me.cmbMyField.BackColor = System.Drawing.Color.Transparent
+        Me.cmbMyField.BorderColor = System.Drawing.Color.White
+        Me.cmbMyField.BorderThickness = 2
+        Me.cmbMyField.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed
+        Me.cmbMyField.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cmbMyField.FillColor = System.Drawing.Color.FromArgb(CType(CType(113, Byte), Integer), CType(CType(93, Byte), Integer), CType(CType(90, Byte), Integer))
+        Me.cmbMyField.FocusedColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(192, Byte), Integer), CType(CType(128, Byte), Integer))
+        Me.cmbMyField.FocusedState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(192, Byte), Integer), CType(CType(128, Byte), Integer))
+        Me.cmbMyField.Font = New System.Drawing.Font("Century Gothic", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.cmbMyField.ForeColor = System.Drawing.Color.White
+        Me.cmbMyField.IntegralHeight = False
+        Me.cmbMyField.ItemHeight = 30
+        Me.cmbMyField.ItemsAppearance.BackColor = System.Drawing.Color.White
+        Me.cmbMyField.ItemsAppearance.ForeColor = System.Drawing.Color.FromArgb(CType(CType(128, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(0, Byte), Integer))
+        Me.cmbMyField.Location = New System.Drawing.Point(47, 41)
+        Me.cmbMyField.Name = "cmbMyField"
+        Me.cmbMyField.Size = New System.Drawing.Size(326, 36)
+        Me.cmbMyField.TabIndex = 36
         '
         'txtComputed
         '
@@ -3201,32 +3222,6 @@ Partial Class MainForm
         Me.btnValidate.TabIndex = 11
         Me.btnValidate.Text = " Validate"
         '
-        'txtTicketNumberExit
-        '
-        Me.txtTicketNumberExit.BorderColor = System.Drawing.Color.White
-        Me.txtTicketNumberExit.BorderThickness = 2
-        Me.txtTicketNumberExit.Cursor = System.Windows.Forms.Cursors.IBeam
-        Me.txtTicketNumberExit.DefaultText = ""
-        Me.txtTicketNumberExit.DisabledState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(208, Byte), Integer), CType(CType(208, Byte), Integer))
-        Me.txtTicketNumberExit.DisabledState.FillColor = System.Drawing.Color.FromArgb(CType(CType(226, Byte), Integer), CType(CType(226, Byte), Integer), CType(CType(226, Byte), Integer))
-        Me.txtTicketNumberExit.DisabledState.ForeColor = System.Drawing.Color.FromArgb(CType(CType(138, Byte), Integer), CType(CType(138, Byte), Integer), CType(CType(138, Byte), Integer))
-        Me.txtTicketNumberExit.DisabledState.PlaceholderForeColor = System.Drawing.Color.FromArgb(CType(CType(138, Byte), Integer), CType(CType(138, Byte), Integer), CType(CType(138, Byte), Integer))
-        Me.txtTicketNumberExit.FillColor = System.Drawing.Color.FromArgb(CType(CType(113, Byte), Integer), CType(CType(93, Byte), Integer), CType(CType(90, Byte), Integer))
-        Me.txtTicketNumberExit.FocusedState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(192, Byte), Integer), CType(CType(128, Byte), Integer))
-        Me.txtTicketNumberExit.Font = New System.Drawing.Font("Century Gothic", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtTicketNumberExit.ForeColor = System.Drawing.Color.White
-        Me.txtTicketNumberExit.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(192, Byte), Integer), CType(CType(128, Byte), Integer))
-        Me.txtTicketNumberExit.Location = New System.Drawing.Point(47, 44)
-        Me.txtTicketNumberExit.Margin = New System.Windows.Forms.Padding(4)
-        Me.txtTicketNumberExit.Name = "txtTicketNumberExit"
-        Me.txtTicketNumberExit.PasswordChar = Global.Microsoft.VisualBasic.ChrW(0)
-        Me.txtTicketNumberExit.PlaceholderForeColor = System.Drawing.Color.White
-        Me.txtTicketNumberExit.PlaceholderText = ""
-        Me.txtTicketNumberExit.SelectedText = ""
-        Me.txtTicketNumberExit.Size = New System.Drawing.Size(326, 36)
-        Me.txtTicketNumberExit.TabIndex = 10
-        Me.txtTicketNumberExit.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
-        '
         'Label5
         '
         Me.Label5.AutoSize = True
@@ -3498,7 +3493,6 @@ Partial Class MainForm
     Friend WithEvents Label8 As Label
     Friend WithEvents Label7 As Label
     Friend WithEvents btnValidate As Guna.UI2.WinForms.Guna2Button
-    Friend WithEvents txtTicketNumberExit As Guna.UI2.WinForms.Guna2TextBox
     Friend WithEvents Label5 As Label
     Friend WithEvents cbDiscount As Guna.UI2.WinForms.Guna2ComboBox
     Friend WithEvents Label6 As Label
@@ -3664,4 +3658,5 @@ Partial Class MainForm
     Friend WithEvents lblVacant As Label
     Friend WithEvents lblOccupied As Label
     Friend WithEvents lblUser As Label
+    Friend WithEvents cmbMyField As Guna.UI2.WinForms.Guna2ComboBox
 End Class
