@@ -184,13 +184,17 @@ Partial Class MainForm
         Me.tabMainNew = New System.Windows.Forms.TabControl()
         Me.tabEntranceNew = New System.Windows.Forms.TabPage()
         Me.Panel9 = New System.Windows.Forms.Panel()
-        Me.lblVacant = New System.Windows.Forms.Label()
-        Me.lblOccupied = New System.Windows.Forms.Label()
-        Me.Label19 = New System.Windows.Forms.Label()
-        Me.Label18 = New System.Windows.Forms.Label()
-        Me.logoPARKINGS = New Guna.UI2.WinForms.Guna2CirclePictureBox()
-        Me.cbFloor = New Guna.UI2.WinForms.Guna2ComboBox()
+        Me.lbl2Vacant = New System.Windows.Forms.Label()
+        Me.Label25 = New System.Windows.Forms.Label()
+        Me.lbl4Vacant = New System.Windows.Forms.Label()
+        Me.Label23 = New System.Windows.Forms.Label()
+        Me.lbl4Occupied = New System.Windows.Forms.Label()
+        Me.Label21 = New System.Windows.Forms.Label()
+        Me.lbl2Occupied = New System.Windows.Forms.Label()
         Me.Label15 = New System.Windows.Forms.Label()
+        Me.lblTVacant = New System.Windows.Forms.Label()
+        Me.lblTOccupied = New System.Windows.Forms.Label()
+        Me.logoPARKINGS = New Guna.UI2.WinForms.Guna2CirclePictureBox()
         Me.btnNextVehicle = New Guna.UI2.WinForms.Guna2Button()
         Me.btnPrintTicket = New Guna.UI2.WinForms.Guna2Button()
         Me.txtTicketNumber = New Guna.UI2.WinForms.Guna2TextBox()
@@ -199,8 +203,6 @@ Partial Class MainForm
         Me.btnCreateTicket = New Guna.UI2.WinForms.Guna2Button()
         Me.txtPlateNumber = New Guna.UI2.WinForms.Guna2TextBox()
         Me.Label3 = New System.Windows.Forms.Label()
-        Me.cbParkingLocation = New Guna.UI2.WinForms.Guna2ComboBox()
-        Me.Label2 = New System.Windows.Forms.Label()
         Me.cbVehicleType = New Guna.UI2.WinForms.Guna2ComboBox()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.tabExitNew = New System.Windows.Forms.TabPage()
@@ -230,6 +232,8 @@ Partial Class MainForm
         Me.cbDiscount = New Guna.UI2.WinForms.Guna2ComboBox()
         Me.Label6 = New System.Windows.Forms.Label()
         Me.Panel1 = New System.Windows.Forms.Panel()
+        Me.Label18 = New System.Windows.Forms.Label()
+        Me.Label19 = New System.Windows.Forms.Label()
         Me.panelHeader.SuspendLayout()
         Me.panelMainWindow.SuspendLayout()
         Me.Panel2.SuspendLayout()
@@ -2452,13 +2456,19 @@ Partial Class MainForm
         'Panel9
         '
         Me.Panel9.BackColor = System.Drawing.Color.FromArgb(CType(CType(244, Byte), Integer), CType(CType(238, Byte), Integer), CType(CType(233, Byte), Integer))
-        Me.Panel9.Controls.Add(Me.lblVacant)
-        Me.Panel9.Controls.Add(Me.lblOccupied)
-        Me.Panel9.Controls.Add(Me.Label19)
         Me.Panel9.Controls.Add(Me.Label18)
-        Me.Panel9.Controls.Add(Me.logoPARKINGS)
-        Me.Panel9.Controls.Add(Me.cbFloor)
+        Me.Panel9.Controls.Add(Me.Label19)
+        Me.Panel9.Controls.Add(Me.lbl2Vacant)
+        Me.Panel9.Controls.Add(Me.Label25)
+        Me.Panel9.Controls.Add(Me.lbl4Vacant)
+        Me.Panel9.Controls.Add(Me.Label23)
+        Me.Panel9.Controls.Add(Me.lbl4Occupied)
+        Me.Panel9.Controls.Add(Me.Label21)
+        Me.Panel9.Controls.Add(Me.lbl2Occupied)
         Me.Panel9.Controls.Add(Me.Label15)
+        Me.Panel9.Controls.Add(Me.lblTVacant)
+        Me.Panel9.Controls.Add(Me.lblTOccupied)
+        Me.Panel9.Controls.Add(Me.logoPARKINGS)
         Me.Panel9.Controls.Add(Me.btnNextVehicle)
         Me.Panel9.Controls.Add(Me.btnPrintTicket)
         Me.Panel9.Controls.Add(Me.txtTicketNumber)
@@ -2467,8 +2477,6 @@ Partial Class MainForm
         Me.Panel9.Controls.Add(Me.btnCreateTicket)
         Me.Panel9.Controls.Add(Me.txtPlateNumber)
         Me.Panel9.Controls.Add(Me.Label3)
-        Me.Panel9.Controls.Add(Me.cbParkingLocation)
-        Me.Panel9.Controls.Add(Me.Label2)
         Me.Panel9.Controls.Add(Me.cbVehicleType)
         Me.Panel9.Controls.Add(Me.Label1)
         Me.Panel9.Dock = System.Windows.Forms.DockStyle.Fill
@@ -2477,49 +2485,115 @@ Partial Class MainForm
         Me.Panel9.Size = New System.Drawing.Size(420, 647)
         Me.Panel9.TabIndex = 2
         '
-        'lblVacant
+        'lbl2Vacant
         '
-        Me.lblVacant.AutoSize = True
-        Me.lblVacant.Font = New System.Drawing.Font("Century Gothic", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblVacant.ForeColor = System.Drawing.Color.FromArgb(CType(CType(113, Byte), Integer), CType(CType(93, Byte), Integer), CType(CType(90, Byte), Integer))
-        Me.lblVacant.Location = New System.Drawing.Point(326, 121)
-        Me.lblVacant.Name = "lblVacant"
-        Me.lblVacant.Size = New System.Drawing.Size(14, 16)
-        Me.lblVacant.TabIndex = 41
-        Me.lblVacant.Text = "0"
+        Me.lbl2Vacant.AutoSize = True
+        Me.lbl2Vacant.Font = New System.Drawing.Font("Century Gothic", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lbl2Vacant.ForeColor = System.Drawing.Color.FromArgb(CType(CType(113, Byte), Integer), CType(CType(93, Byte), Integer), CType(CType(90, Byte), Integer))
+        Me.lbl2Vacant.Location = New System.Drawing.Point(381, 113)
+        Me.lbl2Vacant.Name = "lbl2Vacant"
+        Me.lbl2Vacant.Size = New System.Drawing.Size(14, 16)
+        Me.lbl2Vacant.TabIndex = 49
+        Me.lbl2Vacant.Text = "0"
         '
-        'lblOccupied
+        'Label25
         '
-        Me.lblOccupied.AutoSize = True
-        Me.lblOccupied.Font = New System.Drawing.Font("Century Gothic", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblOccupied.ForeColor = System.Drawing.Color.FromArgb(CType(CType(113, Byte), Integer), CType(CType(93, Byte), Integer), CType(CType(90, Byte), Integer))
-        Me.lblOccupied.Location = New System.Drawing.Point(188, 121)
-        Me.lblOccupied.Name = "lblOccupied"
-        Me.lblOccupied.Size = New System.Drawing.Size(14, 16)
-        Me.lblOccupied.TabIndex = 40
-        Me.lblOccupied.Text = "0"
+        Me.Label25.AutoSize = True
+        Me.Label25.Font = New System.Drawing.Font("Century Gothic", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label25.ForeColor = System.Drawing.Color.FromArgb(CType(CType(113, Byte), Integer), CType(CType(93, Byte), Integer), CType(CType(90, Byte), Integer))
+        Me.Label25.Location = New System.Drawing.Point(231, 112)
+        Me.Label25.Name = "Label25"
+        Me.Label25.Size = New System.Drawing.Size(150, 17)
+        Me.Label25.TabIndex = 48
+        Me.Label25.Text = "Vacant 2 wheels slots:"
         '
-        'Label19
+        'lbl4Vacant
         '
-        Me.Label19.AutoSize = True
-        Me.Label19.Font = New System.Drawing.Font("Century Gothic", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label19.ForeColor = System.Drawing.Color.FromArgb(CType(CType(113, Byte), Integer), CType(CType(93, Byte), Integer), CType(CType(90, Byte), Integer))
-        Me.Label19.Location = New System.Drawing.Point(235, 121)
-        Me.Label19.Name = "Label19"
-        Me.Label19.Size = New System.Drawing.Size(91, 17)
-        Me.Label19.TabIndex = 39
-        Me.Label19.Text = "Vacant slots:"
+        Me.lbl4Vacant.AutoSize = True
+        Me.lbl4Vacant.Font = New System.Drawing.Font("Century Gothic", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lbl4Vacant.ForeColor = System.Drawing.Color.FromArgb(CType(CType(113, Byte), Integer), CType(CType(93, Byte), Integer), CType(CType(90, Byte), Integer))
+        Me.lbl4Vacant.Location = New System.Drawing.Point(381, 129)
+        Me.lbl4Vacant.Name = "lbl4Vacant"
+        Me.lbl4Vacant.Size = New System.Drawing.Size(14, 16)
+        Me.lbl4Vacant.TabIndex = 47
+        Me.lbl4Vacant.Text = "0"
         '
-        'Label18
+        'Label23
         '
-        Me.Label18.AutoSize = True
-        Me.Label18.Font = New System.Drawing.Font("Century Gothic", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label18.ForeColor = System.Drawing.Color.FromArgb(CType(CType(113, Byte), Integer), CType(CType(93, Byte), Integer), CType(CType(90, Byte), Integer))
-        Me.Label18.Location = New System.Drawing.Point(81, 121)
-        Me.Label18.Name = "Label18"
-        Me.Label18.Size = New System.Drawing.Size(107, 17)
-        Me.Label18.TabIndex = 37
-        Me.Label18.Text = "Occupied slots:"
+        Me.Label23.AutoSize = True
+        Me.Label23.Font = New System.Drawing.Font("Century Gothic", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label23.ForeColor = System.Drawing.Color.FromArgb(CType(CType(113, Byte), Integer), CType(CType(93, Byte), Integer), CType(CType(90, Byte), Integer))
+        Me.Label23.Location = New System.Drawing.Point(231, 129)
+        Me.Label23.Name = "Label23"
+        Me.Label23.Size = New System.Drawing.Size(150, 17)
+        Me.Label23.TabIndex = 46
+        Me.Label23.Text = "Vacant 4 wheels slots:"
+        '
+        'lbl4Occupied
+        '
+        Me.lbl4Occupied.AutoSize = True
+        Me.lbl4Occupied.Font = New System.Drawing.Font("Century Gothic", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lbl4Occupied.ForeColor = System.Drawing.Color.FromArgb(CType(CType(113, Byte), Integer), CType(CType(93, Byte), Integer), CType(CType(90, Byte), Integer))
+        Me.lbl4Occupied.Location = New System.Drawing.Point(191, 129)
+        Me.lbl4Occupied.Name = "lbl4Occupied"
+        Me.lbl4Occupied.Size = New System.Drawing.Size(14, 16)
+        Me.lbl4Occupied.TabIndex = 45
+        Me.lbl4Occupied.Text = "0"
+        '
+        'Label21
+        '
+        Me.Label21.AutoSize = True
+        Me.Label21.Font = New System.Drawing.Font("Century Gothic", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label21.ForeColor = System.Drawing.Color.FromArgb(CType(CType(113, Byte), Integer), CType(CType(93, Byte), Integer), CType(CType(90, Byte), Integer))
+        Me.Label21.Location = New System.Drawing.Point(25, 129)
+        Me.Label21.Name = "Label21"
+        Me.Label21.Size = New System.Drawing.Size(166, 17)
+        Me.Label21.TabIndex = 44
+        Me.Label21.Text = "Occupied 4 wheels slots:"
+        '
+        'lbl2Occupied
+        '
+        Me.lbl2Occupied.AutoSize = True
+        Me.lbl2Occupied.Font = New System.Drawing.Font("Century Gothic", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lbl2Occupied.ForeColor = System.Drawing.Color.FromArgb(CType(CType(113, Byte), Integer), CType(CType(93, Byte), Integer), CType(CType(90, Byte), Integer))
+        Me.lbl2Occupied.Location = New System.Drawing.Point(191, 113)
+        Me.lbl2Occupied.Name = "lbl2Occupied"
+        Me.lbl2Occupied.Size = New System.Drawing.Size(14, 16)
+        Me.lbl2Occupied.TabIndex = 43
+        Me.lbl2Occupied.Text = "0"
+        '
+        'Label15
+        '
+        Me.Label15.AutoSize = True
+        Me.Label15.Font = New System.Drawing.Font("Century Gothic", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label15.ForeColor = System.Drawing.Color.FromArgb(CType(CType(113, Byte), Integer), CType(CType(93, Byte), Integer), CType(CType(90, Byte), Integer))
+        Me.Label15.Location = New System.Drawing.Point(25, 112)
+        Me.Label15.Name = "Label15"
+        Me.Label15.Size = New System.Drawing.Size(166, 17)
+        Me.Label15.TabIndex = 42
+        Me.Label15.Text = "Occupied 2 wheels slots:"
+        '
+        'lblTVacant
+        '
+        Me.lblTVacant.AutoSize = True
+        Me.lblTVacant.Font = New System.Drawing.Font("Century Gothic", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblTVacant.ForeColor = System.Drawing.Color.FromArgb(CType(CType(113, Byte), Integer), CType(CType(93, Byte), Integer), CType(CType(90, Byte), Integer))
+        Me.lblTVacant.Location = New System.Drawing.Point(381, 145)
+        Me.lblTVacant.Name = "lblTVacant"
+        Me.lblTVacant.Size = New System.Drawing.Size(14, 16)
+        Me.lblTVacant.TabIndex = 41
+        Me.lblTVacant.Text = "0"
+        '
+        'lblTOccupied
+        '
+        Me.lblTOccupied.AutoSize = True
+        Me.lblTOccupied.Font = New System.Drawing.Font("Century Gothic", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblTOccupied.ForeColor = System.Drawing.Color.FromArgb(CType(CType(113, Byte), Integer), CType(CType(93, Byte), Integer), CType(CType(90, Byte), Integer))
+        Me.lblTOccupied.Location = New System.Drawing.Point(191, 145)
+        Me.lblTOccupied.Name = "lblTOccupied"
+        Me.lblTOccupied.Size = New System.Drawing.Size(14, 16)
+        Me.lblTOccupied.TabIndex = 40
+        Me.lblTOccupied.Text = "0"
         '
         'logoPARKINGS
         '
@@ -2533,41 +2607,6 @@ Partial Class MainForm
         Me.logoPARKINGS.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
         Me.logoPARKINGS.TabIndex = 31
         Me.logoPARKINGS.TabStop = False
-        '
-        'cbFloor
-        '
-        Me.cbFloor.BackColor = System.Drawing.Color.Transparent
-        Me.cbFloor.BorderColor = System.Drawing.Color.White
-        Me.cbFloor.BorderThickness = 2
-        Me.cbFloor.DisabledState.BorderColor = System.Drawing.Color.Gray
-        Me.cbFloor.DisabledState.FillColor = System.Drawing.Color.FromArgb(CType(CType(113, Byte), Integer), CType(CType(93, Byte), Integer), CType(CType(90, Byte), Integer))
-        Me.cbFloor.DisabledState.ForeColor = System.Drawing.Color.White
-        Me.cbFloor.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed
-        Me.cbFloor.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.cbFloor.FillColor = System.Drawing.Color.FromArgb(CType(CType(113, Byte), Integer), CType(CType(93, Byte), Integer), CType(CType(90, Byte), Integer))
-        Me.cbFloor.FocusedColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(192, Byte), Integer), CType(CType(128, Byte), Integer))
-        Me.cbFloor.FocusedState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(192, Byte), Integer), CType(CType(128, Byte), Integer))
-        Me.cbFloor.Font = New System.Drawing.Font("Verdana", 12.0!)
-        Me.cbFloor.ForeColor = System.Drawing.Color.White
-        Me.cbFloor.ItemHeight = 30
-        Me.cbFloor.Items.AddRange(New Object() {"1st Level", "2nd Level", "3rd Level"})
-        Me.cbFloor.ItemsAppearance.BackColor = System.Drawing.Color.White
-        Me.cbFloor.ItemsAppearance.ForeColor = System.Drawing.Color.FromArgb(CType(CType(128, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(0, Byte), Integer))
-        Me.cbFloor.Location = New System.Drawing.Point(49, 315)
-        Me.cbFloor.Name = "cbFloor"
-        Me.cbFloor.Size = New System.Drawing.Size(326, 36)
-        Me.cbFloor.TabIndex = 17
-        '
-        'Label15
-        '
-        Me.Label15.AutoSize = True
-        Me.Label15.Font = New System.Drawing.Font("Verdana", 11.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label15.ForeColor = System.Drawing.Color.FromArgb(CType(CType(113, Byte), Integer), CType(CType(93, Byte), Integer), CType(CType(90, Byte), Integer))
-        Me.Label15.Location = New System.Drawing.Point(46, 294)
-        Me.Label15.Name = "Label15"
-        Me.Label15.Size = New System.Drawing.Size(55, 18)
-        Me.Label15.TabIndex = 16
-        Me.Label15.Text = "Floor:"
         '
         'btnNextVehicle
         '
@@ -2694,7 +2733,7 @@ Partial Class MainForm
         Me.txtPlateNumber.Font = New System.Drawing.Font("Verdana", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.txtPlateNumber.ForeColor = System.Drawing.Color.White
         Me.txtPlateNumber.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(192, Byte), Integer), CType(CType(128, Byte), Integer))
-        Me.txtPlateNumber.Location = New System.Drawing.Point(49, 246)
+        Me.txtPlateNumber.Location = New System.Drawing.Point(53, 323)
         Me.txtPlateNumber.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
         Me.txtPlateNumber.Name = "txtPlateNumber"
         Me.txtPlateNumber.PasswordChar = Global.Microsoft.VisualBasic.ChrW(0)
@@ -2710,46 +2749,11 @@ Partial Class MainForm
         Me.Label3.AutoSize = True
         Me.Label3.Font = New System.Drawing.Font("Verdana", 11.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label3.ForeColor = System.Drawing.Color.FromArgb(CType(CType(113, Byte), Integer), CType(CType(93, Byte), Integer), CType(CType(90, Byte), Integer))
-        Me.Label3.Location = New System.Drawing.Point(46, 224)
+        Me.Label3.Location = New System.Drawing.Point(50, 301)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(126, 18)
         Me.Label3.TabIndex = 4
         Me.Label3.Text = "Plate Number:"
-        '
-        'cbParkingLocation
-        '
-        Me.cbParkingLocation.BackColor = System.Drawing.Color.Transparent
-        Me.cbParkingLocation.BorderColor = System.Drawing.Color.White
-        Me.cbParkingLocation.BorderThickness = 2
-        Me.cbParkingLocation.DisabledState.BorderColor = System.Drawing.Color.Gray
-        Me.cbParkingLocation.DisabledState.FillColor = System.Drawing.Color.FromArgb(CType(CType(113, Byte), Integer), CType(CType(93, Byte), Integer), CType(CType(90, Byte), Integer))
-        Me.cbParkingLocation.DisabledState.ForeColor = System.Drawing.Color.White
-        Me.cbParkingLocation.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed
-        Me.cbParkingLocation.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.cbParkingLocation.FillColor = System.Drawing.Color.FromArgb(CType(CType(113, Byte), Integer), CType(CType(93, Byte), Integer), CType(CType(90, Byte), Integer))
-        Me.cbParkingLocation.FocusedColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(192, Byte), Integer), CType(CType(128, Byte), Integer))
-        Me.cbParkingLocation.FocusedState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(192, Byte), Integer), CType(CType(128, Byte), Integer))
-        Me.cbParkingLocation.Font = New System.Drawing.Font("Verdana", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.cbParkingLocation.ForeColor = System.Drawing.Color.White
-        Me.cbParkingLocation.IntegralHeight = False
-        Me.cbParkingLocation.ItemHeight = 30
-        Me.cbParkingLocation.ItemsAppearance.BackColor = System.Drawing.Color.White
-        Me.cbParkingLocation.ItemsAppearance.ForeColor = System.Drawing.Color.FromArgb(CType(CType(128, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(0, Byte), Integer))
-        Me.cbParkingLocation.Location = New System.Drawing.Point(49, 385)
-        Me.cbParkingLocation.Name = "cbParkingLocation"
-        Me.cbParkingLocation.Size = New System.Drawing.Size(326, 36)
-        Me.cbParkingLocation.TabIndex = 3
-        '
-        'Label2
-        '
-        Me.Label2.AutoSize = True
-        Me.Label2.Font = New System.Drawing.Font("Verdana", 11.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label2.ForeColor = System.Drawing.Color.FromArgb(CType(CType(113, Byte), Integer), CType(CType(93, Byte), Integer), CType(CType(90, Byte), Integer))
-        Me.Label2.Location = New System.Drawing.Point(46, 364)
-        Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(150, 18)
-        Me.Label2.TabIndex = 2
-        Me.Label2.Text = "Parking Location:"
         '
         'cbVehicleType
         '
@@ -2770,7 +2774,7 @@ Partial Class MainForm
         Me.cbVehicleType.Items.AddRange(New Object() {"2 Wheels", "3/4 Wheels"})
         Me.cbVehicleType.ItemsAppearance.BackColor = System.Drawing.Color.White
         Me.cbVehicleType.ItemsAppearance.ForeColor = System.Drawing.Color.FromArgb(CType(CType(128, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(0, Byte), Integer))
-        Me.cbVehicleType.Location = New System.Drawing.Point(49, 175)
+        Me.cbVehicleType.Location = New System.Drawing.Point(53, 252)
         Me.cbVehicleType.Name = "cbVehicleType"
         Me.cbVehicleType.Size = New System.Drawing.Size(326, 36)
         Me.cbVehicleType.TabIndex = 1
@@ -2780,7 +2784,7 @@ Partial Class MainForm
         Me.Label1.AutoSize = True
         Me.Label1.Font = New System.Drawing.Font("Verdana", 11.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label1.ForeColor = System.Drawing.Color.FromArgb(CType(CType(113, Byte), Integer), CType(CType(93, Byte), Integer), CType(CType(90, Byte), Integer))
-        Me.Label1.Location = New System.Drawing.Point(46, 154)
+        Me.Label1.Location = New System.Drawing.Point(50, 231)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(116, 18)
         Me.Label1.TabIndex = 0
@@ -3272,6 +3276,28 @@ Partial Class MainForm
         Me.Panel1.Size = New System.Drawing.Size(3, 600)
         Me.Panel1.TabIndex = 5
         '
+        'Label18
+        '
+        Me.Label18.AutoSize = True
+        Me.Label18.Font = New System.Drawing.Font("Century Gothic", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label18.ForeColor = System.Drawing.Color.FromArgb(CType(CType(113, Byte), Integer), CType(CType(93, Byte), Integer), CType(CType(90, Byte), Integer))
+        Me.Label18.Location = New System.Drawing.Point(290, 144)
+        Me.Label18.Name = "Label18"
+        Me.Label18.Size = New System.Drawing.Size(91, 17)
+        Me.Label18.TabIndex = 51
+        Me.Label18.Text = "Vacant slots:"
+        '
+        'Label19
+        '
+        Me.Label19.AutoSize = True
+        Me.Label19.Font = New System.Drawing.Font("Century Gothic", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label19.ForeColor = System.Drawing.Color.FromArgb(CType(CType(113, Byte), Integer), CType(CType(93, Byte), Integer), CType(CType(90, Byte), Integer))
+        Me.Label19.Location = New System.Drawing.Point(80, 144)
+        Me.Label19.Name = "Label19"
+        Me.Label19.Size = New System.Drawing.Size(111, 17)
+        Me.Label19.TabIndex = 50
+        Me.Label19.Text = "Occupied  slots:"
+        '
         'MainForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -3459,8 +3485,6 @@ Partial Class MainForm
     Friend WithEvents tabMainNew As TabControl
     Friend WithEvents tabEntranceNew As TabPage
     Friend WithEvents Panel9 As Panel
-    Friend WithEvents cbFloor As Guna.UI2.WinForms.Guna2ComboBox
-    Friend WithEvents Label15 As Label
     Friend WithEvents btnNextVehicle As Guna.UI2.WinForms.Guna2Button
     Friend WithEvents btnPrintTicket As Guna.UI2.WinForms.Guna2Button
     Friend WithEvents txtTicketNumber As Guna.UI2.WinForms.Guna2TextBox
@@ -3469,8 +3493,6 @@ Partial Class MainForm
     Friend WithEvents btnCreateTicket As Guna.UI2.WinForms.Guna2Button
     Friend WithEvents txtPlateNumber As Guna.UI2.WinForms.Guna2TextBox
     Friend WithEvents Label3 As Label
-    Friend WithEvents cbParkingLocation As Guna.UI2.WinForms.Guna2ComboBox
-    Friend WithEvents Label2 As Label
     Friend WithEvents cbVehicleType As Guna.UI2.WinForms.Guna2ComboBox
     Friend WithEvents Label1 As Label
     Friend WithEvents tabExitNew As TabPage
@@ -3653,10 +3675,18 @@ Partial Class MainForm
     Friend WithEvents Label16 As Label
     Friend WithEvents btn2ndFloor As Button
     Friend WithEvents logoPARKINGS As Guna.UI2.WinForms.Guna2CirclePictureBox
-    Friend WithEvents Label19 As Label
-    Friend WithEvents Label18 As Label
-    Friend WithEvents lblVacant As Label
-    Friend WithEvents lblOccupied As Label
+    Friend WithEvents lblTVacant As Label
+    Friend WithEvents lblTOccupied As Label
     Friend WithEvents lblUser As Label
     Friend WithEvents cmbMyField As Guna.UI2.WinForms.Guna2ComboBox
+    Friend WithEvents lbl4Occupied As Label
+    Friend WithEvents Label21 As Label
+    Friend WithEvents lbl2Occupied As Label
+    Friend WithEvents Label15 As Label
+    Friend WithEvents lbl2Vacant As Label
+    Friend WithEvents Label25 As Label
+    Friend WithEvents lbl4Vacant As Label
+    Friend WithEvents Label23 As Label
+    Friend WithEvents Label18 As Label
+    Friend WithEvents Label19 As Label
 End Class

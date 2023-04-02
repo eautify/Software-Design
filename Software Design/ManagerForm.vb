@@ -234,12 +234,12 @@ Public Class ManagerForm
             connect()
             Dim query2WString As String = "SELECT COUNT(*) FROM tblTransactionHistory WHERE VehicleType LIKE '%2 Wheels%'"
             Dim command2 As New OleDb.OleDbCommand(query2WString, conn)
-            Dim count2 As Integer = command2.ExecuteScalar()
+            count2 = command2.ExecuteScalar()
             txtTotal2Wheels.Text = count2.ToString()
 
             Dim query4WString As String = "SELECT COUNT(*) FROM tblTransactionHistory WHERE VehicleType LIKE '%3/4 Wheels%'"
             Dim command4 As New OleDb.OleDbCommand(query4WString, conn)
-            Dim count4 As Integer = command4.ExecuteScalar()
+            count4 = command4.ExecuteScalar()
             txtTotal4Wheels.Text = count4.ToString()
 
             Dim queryString As String = "SELECT COUNT(*) FROM tblTransactionHistory WHERE VehicleType"
@@ -259,11 +259,10 @@ Public Class ManagerForm
             Dim commandOccupied As New OleDb.OleDbCommand(queryOccupied, conn)
             Dim countOccupied As Integer = commandOccupied.ExecuteScalar()
             txtOccupied.Text = countOccupied.ToString()
-            MainForm.lblOccupied.Text = countOccupied.ToString()
+            MainForm.lblTOccupied.Text = countOccupied.ToString()
 
             txtVacant.Text = 139 - countOccupied
-            MainForm.lblVacant.Text = 139 - countOccupied
-
+            MainForm.lblTVacant.Text = 139 - countOccupied
         Catch ex As Exception
             dbFailed()
             MessageBox.Show("An error occurred: " & ex.Message)

@@ -6,8 +6,6 @@ Imports System.Threading
 Imports System.Web.UI.WebControls
 
 Public Class MainForm
-    Dim avail2WheelLots As Integer = 48
-    Dim avail4WheelLots As Integer = 144
     Dim plateNumberPlaceholder As String
     Dim Type As String
     Dim TimeIn As String
@@ -34,6 +32,11 @@ Public Class MainForm
     Dim longpaper As Integer
     Dim rate As Double
     Dim y As Double
+    Dim noParkingLocation As String
+    Dim noFloor As String = "ERROR"
+
+    Dim rand As New Random()
+    Dim combinedArray As String()
 
     Private Sub btnExit_Click(sender As Object, e As EventArgs) Handles btnExit.Click
         LogIn_Form.Show()
@@ -43,15 +46,23 @@ Public Class MainForm
     Private Sub MainForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         loginSuccess()
         Try
-            Dim columnName As String = "ID"
-            Dim query As String = String.Format("SELECT MAX({0}) AS MaxValue FROM ticketNumbers;", columnName)
             connect()
-            Dim command As New OleDbCommand(query, conn)
-            Dim maxValueObject As Object = command.ExecuteScalar()
-            If maxValueObject Is DBNull.Value Then Serial = 0 Else Serial = CInt(maxValueObject)
+            Dim query As String = "SELECT MAX(ID) FROM ticketNumbers"
+            Using command As New OleDbCommand(query, conn)
+                ' Execute the SQL query and retrieve the highest value
+                Dim highestValue As Object = command.ExecuteScalar()
+
+                ' Check if the highest value is not null
+                If highestValue IsNot DBNull.Value Then
+                    ' Display the highest value in a message box
+                    Serial = CInt(highestValue)
+                Else
+                    Serial = 0
+                End If
+            End Using
         Catch ex As Exception
             dbFailed()
-            MessageBox.Show("An error occurred: " & ex.Message)
+            MessageBox.Show("An error occurred: " & ex.Message, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error)
         Finally
             conn.Close()
         End Try
@@ -67,7 +78,7 @@ Public Class MainForm
         lblUser.Text = FullName
 
         btnPrintTicket.Enabled = False
-        btnNextVehicle.Enabled = False
+        'btnNextVehicle.Enabled = False
         txtAmountTendered.Enabled = False
         btnPay.Enabled = False
         btnPrintReceipt.Enabled = False
@@ -77,42 +88,6 @@ Public Class MainForm
         GetAvailability()
         loadDetails()
         PopulateComboBox()
-    End Sub
-
-
-    Private Sub cbFloor_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbFloor.SelectedIndexChanged
-        If cbVehicleType.SelectedIndex = 0 And cbFloor.SelectedIndex = 0 Then
-            cbParkingLocation.Items.Clear()
-            cbParkingLocation.Items.AddRange(New Object() {"1FA-01", "1FA-02", "1FA-03", "1FA-04", "1FA-05", "1FA-06", "1FA-07", "1FA-08", "1FA-09", "1FA-10"})
-        ElseIf cbVehicleType.SelectedIndex = 0 And cbFloor.SelectedIndex = 1 Then
-            cbParkingLocation.Items.Clear()
-            cbParkingLocation.Items.AddRange(New Object() {"2FA-01", "2FA-02", "2FA-03", "2FA-04", "2FA-05", "2FA-06", "2FA-07", "2FA-08", "2FA-09", "2FA-10", "2FA-11", "2FA-12", "2FA-13", "2FA-14", "2FA-15", "2FA-16", "2FA-17", "2FA-18"}) '
-        ElseIf cbVehicleType.SelectedIndex = 0 And cbFloor.SelectedIndex = 2 Then
-            cbParkingLocation.Items.Clear()
-            cbParkingLocation.Items.AddRange(New Object() {"3FA-01", "3FA-02", "3FA-03", "3FA-04", "3FA-05", "3FA-06", "3FA-07", "3FA-08", "3FA-09", "3FA-10", "3FA-11", "3FA-12", "3FA-13", "3FA-14"})
-        ElseIf cbVehicleType.SelectedIndex = 1 And cbFloor.SelectedIndex = 0 Then
-            cbParkingLocation.Items.Clear()
-            cbParkingLocation.Items.AddRange(New Object() {"1FB-01", "1FB-02", "1FB-03", "1FB-04", "1FB-05", "1FB-06", "1FB-07", "1FB-08", "1FB-09", "1FB-10", "1FB-11"})
-            cbParkingLocation.Items.AddRange(New Object() {"1FC-01", "1FC-02", "1FC-03", "1FC-04", "1FC-05", "1FC-06", "1FC-07", "1FC-08", "1FC-09", "1FC-10", "1FC-11"})
-            cbParkingLocation.Items.AddRange(New Object() {"1FD-01", "1FD-02", "1FD-03", "1FD-04", "1FD-05", "1FD-06", "1FD-07", "1FD-08", "1FD-09", "1FD-10", "1FD-11", "1FD-12"})
-        ElseIf cbVehicleType.SelectedIndex = 1 And cbFloor.SelectedIndex = 1 Then
-            cbParkingLocation.Items.Clear()
-            cbParkingLocation.Items.AddRange(New Object() {"2FB-01", "2FB-02", "2FB-03", "2FB-04", "2FB-05", "2FB-06", "2FB-07", "2FB-08", "2FB-09", "2FB-10", "2FB-11"})
-            cbParkingLocation.Items.AddRange(New Object() {"2FC-01", "2FC-02", "2FC-03", "2FC-04", "2FC-05", "2FC-06", "2FC-07", "2FC-08", "2FC-09", "2FC-10", "2FC-11"})
-            cbParkingLocation.Items.AddRange(New Object() {"2FD-01", "2FD-02", "2FD-03", "2FD-04", "2FD-05", "2FD-06", "2FD-07"})
-        ElseIf cbVehicleType.SelectedIndex = 1 And cbFloor.SelectedIndex = 2 Then
-            cbParkingLocation.Items.Clear()
-            cbParkingLocation.Items.AddRange(New Object() {"3FB-01", "3FB-02", "3FB-03", "3FB-04", "3FB-05", "3FB-06", "3FB-07", "3FB-08", "3FB-09", "3FB-10", "3FB-11"})
-            cbParkingLocation.Items.AddRange(New Object() {"3FC-01", "3FC-02", "3FC-03", "3FC-04", "3FC-05", "3FC-06", "3FC-07", "3FC-08", "3FC-09", "3FC-10", "3FC-11"})
-            cbParkingLocation.Items.AddRange(New Object() {"3FD-01", "3FD-02", "3FD-03", "3FD-04", "3FD-05", "3FD-06", "3FD-07", "3FD-08", "3FD-09", "3FD-10", "3FD-11", "3FD-12"})
-        Else
-            cbParkingLocation.Items.Clear()
-        End If
-    End Sub
-
-    Private Sub cbVehicleType_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbVehicleType.SelectedIndexChanged
-        cbFloor.SelectedIndex = -1
-        cbParkingLocation.SelectedIndex = -1
     End Sub
 
     Function populate()
@@ -133,107 +108,167 @@ Public Class MainForm
     End Function
 
     Sub createTicket()
-        For Each c As Control In {cbVehicleType, txtPlateNumber, cbParkingLocation}
+        If noParkingLocation.Contains("1F") Then
+            noFloor = "1st Level"
+        ElseIf noParkingLocation.Contains("2F") Then
+            noFloor = "2nd Level"
+        ElseIf noParkingLocation.Contains("3F") Then
+            noFloor = "3rd Level"
+        End If
+
+        For Each c As Control In {cbVehicleType, txtPlateNumber}
             c.Enabled = False
         Next
 
         btnCreateTicket.Enabled = False
-        btnPrintTicket.Enabled = True
+        'btnPrintTicket.Enabled = True
         btnReset.Enabled = False
 
         connect()
-        Dim cmd As New OleDbCommand("Insert into tblVehicleList values(@floor, @location, @ticket, @plate, @type, @datetime)", conn)
-        cmd.Parameters.AddWithValue("@floor", cbFloor.Text)
-        cmd.Parameters.AddWithValue("@location", cbParkingLocation.Text)
-        cmd.Parameters.AddWithValue("@ticket", txtTicketNumber.Text)
-        cmd.Parameters.AddWithValue("@plate", txtPlateNumber.Text)
-        cmd.Parameters.AddWithValue("@type", cbVehicleType.Text)
-        cmd.Parameters.AddWithValue("@datetime", Format(Now, "MM/dd/yy hh:mm tt"))
-        cmd.ExecuteNonQuery()
+        Try
+            Dim cmd As New OleDbCommand("Insert into tblVehicleList values(@floor, @location, @ticket, @plate, @type, @datetime)", conn)
+            cmd.Parameters.AddWithValue("@floor", noFloor)
+            cmd.Parameters.AddWithValue("@location", noParkingLocation)
+            cmd.Parameters.AddWithValue("@ticket", txtTicketNumber.Text)
+            cmd.Parameters.AddWithValue("@plate", txtPlateNumber.Text)
+            cmd.Parameters.AddWithValue("@type", cbVehicleType.Text)
+            cmd.Parameters.AddWithValue("@datetime", Format(Now, "MM/dd/yy hh:mm tt"))
+            cmd.ExecuteNonQuery()
 
-        cmd = New OleDbCommand("Insert into tblParkingActivity values(@ticket, @plate, @type, @location, @datetime, @entry)", conn)
-        cmd.Parameters.AddWithValue("@ticket", txtTicketNumber.Text)
-        cmd.Parameters.AddWithValue("@plate", txtPlateNumber.Text)
-        cmd.Parameters.AddWithValue("@type", cbVehicleType.Text)
-        cmd.Parameters.AddWithValue("@location", cbParkingLocation.Text)
-        cmd.Parameters.AddWithValue("@datetime", Format(Now, "MM/dd/yy hh:mm tt"))
-        cmd.Parameters.AddWithValue("@entry", "Vehicle entered.")
-        cmd.ExecuteNonQuery()
+            cmd = New OleDbCommand("Insert into tblParkingActivity values(@ticket, @plate, @type, @location, @datetime, @entry)", conn)
+            cmd.Parameters.AddWithValue("@ticket", txtTicketNumber.Text)
+            cmd.Parameters.AddWithValue("@plate", txtPlateNumber.Text)
+            cmd.Parameters.AddWithValue("@type", cbVehicleType.Text)
+            cmd.Parameters.AddWithValue("@location", noParkingLocation)
+            cmd.Parameters.AddWithValue("@datetime", Format(Now, "MM/dd/yy hh:mm tt"))
+            cmd.Parameters.AddWithValue("@entry", "Vehicle entered.")
+            cmd.ExecuteNonQuery()
 
-        cmd = New OleDbCommand("Insert into ticketNumbers values(@serial, @ticket)", conn)
-        cmd.Parameters.AddWithValue("@serial", Serial)
-        cmd.Parameters.AddWithValue("@ticket", txtTicketNumber.Text)
-        cmd.ExecuteNonQuery()
-
+            cmd = New OleDbCommand("Insert into ticketNumbers values(@serial, @ticket)", conn)
+            cmd.Parameters.AddWithValue("@serial", Serial.ToString("00"))
+            cmd.Parameters.AddWithValue("@ticket", txtTicketNumber.Text)
+            cmd.ExecuteNonQuery()
+        Catch ex As Exception
+            MessageBox.Show("An error occurred: " & ex.Message, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            conn.Close()
+        End Try
         populate()
-        conn.Close()
     End Sub
 
 
     Private Sub btnCreateTicket_Click(sender As Object, e As EventArgs) Handles btnCreateTicket.Click
-        If String.IsNullOrEmpty(txtPlateNumber.Text) OrElse String.IsNullOrEmpty(cbParkingLocation.Text) OrElse String.IsNullOrEmpty(cbVehicleType.Text) OrElse String.IsNullOrEmpty(cbFloor.Text) Then
+        If String.IsNullOrEmpty(txtPlateNumber.Text) OrElse String.IsNullOrEmpty(cbVehicleType.Text) Then
             MsgBox("Vehicle information can't be incomplete.", vbInformation, "Invalid Entry")
-            Return
+            Exit Sub
         End If
 
-        If txtPlateNumber.TextLength < 4 Then
+        If (txtPlateNumber.TextLength < 4) Then
             MsgBox("That is an invalid plate number.", vbInformation, "Invalid Plate Number")
             txtPlateNumber.Clear()
             txtPlateNumber.Focus()
-            Return
+            Exit Sub
         End If
 
-        Try
-            da = New OleDbDataAdapter("Select * from tblVehicleList where ParkingLocation='" & cbParkingLocation.Text & "'", conn)
-            dset = New DataSet
-            da.Fill(dset, "tblVehicleList")
+        If MsgBox("Confrim parking?", vbYesNo + vbQuestion, "Confirm") = vbYes Then
+            Try
+                connect()
+                If cbVehicleType.SelectedIndex = 0 Then
+                    If count2Slots = 42 Then
+                        MsgBox("Parking lots for 2 wheels vehicle are full.", vbInformation, "Parking lot full")
+                        Exit Sub
+                    Else
+                        Serial += 1
+                        rate = vehicle2Wheels
 
-            If dset.Tables("tblVehicleList").Rows.Count > 0 Then
-                MsgBox("Parking lot is occupied.", vbInformation, "Parking Failed!")
-                cbParkingLocation.SelectedIndex = -1
-                Return
-            End If
+                        Dim array1FA As String() = {"1FA-01", "1FA-02", "1FA-03", "1FA-04", "1FA-05", "1FA-06", "1FA-07", "1FA-08", "1FA-09", "1FA-10"}
+                        Dim array2FA As String() = {"2FA-01", "2FA-02", "2FA-03", "2FA-04", "2FA-05", "2FA-06", "2FA-07", "2FA-08", "2FA-09", "2FA-10", "2FA-11", "2FA-12", "2FA-13", "2FA-14", "2FA-15", "2FA-16", "2FA-17", "2FA-18"}
+                        Dim array23FA As String() = {"3FA-01", "3FA-02", "3FA-03", "3FA-04", "3FA-05", "3FA-06", "3FA-07", "3FA-08", "3FA-09", "3FA-10", "3FA-11", "3FA-12", "3FA-13", "3FA-14"}
 
-            If MsgBox("Confirm parking?", vbYesNo + vbQuestion, "Confirm") = vbYes Then
-                Serial += 1
-                Dim availLots As Integer = If(cbVehicleType.SelectedIndex = 0, avail2WheelLots, avail4WheelLots)
+                        Dim list As New List(Of String)
+                        list.AddRange(array1FA)
+                        list.AddRange(array2FA)
+                        list.AddRange(array23FA)
 
-                If availLots = 0 Then
-                    MsgBox("Parking lots for " & cbVehicleType.Text & " vehicles are full.", vbInformation, "Parking lot full")
-                    Return
+                        combinedArray = list.ToArray()
+                        noParkingLocation = combinedArray(rand.Next(0, combinedArray.Length))
+                        Dim query As String = "SELECT COUNT(*) FROM tblVehicleList WHERE ParkingLocation=@Location"
+                        Dim cmd As New OleDbCommand(query, conn)
+                        cmd.Parameters.AddWithValue("@Location", noParkingLocation)
+                        Dim count As Integer = CInt(cmd.ExecuteScalar())
+                        While count > 0
+                            noParkingLocation = combinedArray(rand.Next(0, combinedArray.Length))
+                            cmd.Parameters("@Location").Value = noParkingLocation
+                            count = CInt(cmd.ExecuteScalar())
+                        End While
+
+                        txtTicketNumber.Text = "TK-" & Serial.ToString("00000")
+                        createTicket()
+                    End If
+                Else
+                    If count4Slots = 97 Then
+                        MsgBox("Parking lots for 4 wheels vehicle are full.", vbInformation, "Parking lot full")
+                        Exit Sub
+                    Else
+                        Serial += 1
+                        rate = vehicle4Wheels
+
+                        Dim array1FB As String() = {"1FB-01", "1FB-02", "1FB-03", "1FB-04", "1FB-05", "1FB-06", "1FB-07", "1FB-08", "1FB-09", "1FB-10", "1FB-11"}
+                        Dim array1FC As String() = {"1FC-01", "1FC-02", "1FC-03", "1FC-04", "1FC-05", "1FC-06", "1FC-07", "1FC-08", "1FC-09", "1FC-10", "1FC-11"}
+                        Dim array1FD As String() = {"1FD-01", "1FD-02", "1FD-03", "1FD-04", "1FD-05", "1FD-06", "1FD-07", "1FD-08", "1FD-09", "1FD-10", "1FD-11", "1FD-12"}
+                        Dim array2FB As String() = {"2FB-01", "2FB-02", "2FB-03", "2FB-04", "2FB-05", "2FB-06", "2FB-07", "2FB-08", "2FB-09", "2FB-10", "2FB-11"}
+                        Dim array2FC As String() = {"2FC-01", "2FC-02", "2FC-03", "2FC-04", "2FC-05", "2FC-06", "2FC-07", "2FC-08", "2FC-09", "2FC-10", "2FC-11"}
+                        Dim array2FD As String() = {"2FD-01", "2FD-02", "2FD-03", "2FD-04", "2FD-05", "2FD-06", "2FD-07"}
+                        Dim array3FB As String() = {"3FB-01", "3FB-02", "3FB-03", "3FB-04", "3FB-05", "3FB-06", "3FB-07", "3FB-08", "3FB-09", "3FB-10", "3FB-11"}
+                        Dim array3FC As String() = {"3FC-01", "3FC-02", "3FC-03", "3FC-04", "3FC-05", "3FC-06", "3FC-07", "3FC-08", "3FC-09", "3FC-10", "3FC-11"}
+                        Dim array3FD As String() = {"3FD-01", "3FD-02", "3FD-03", "3FD-04", "3FD-05", "3FD-06", "3FD-07", "3FD-08", "3FD-09", "3FD-10", "3FD-11", "3FD-12"}
+
+                        Dim list As New List(Of String)
+                        list.AddRange(array1FB)
+                        list.AddRange(array1FC)
+                        list.AddRange(array1FD)
+                        list.AddRange(array2FB)
+                        list.AddRange(array2FC)
+                        list.AddRange(array2FD)
+                        list.AddRange(array3FB)
+                        list.AddRange(array3FC)
+                        list.AddRange(array3FD)
+
+                        combinedArray = list.ToArray()
+                        noParkingLocation = combinedArray(rand.Next(0, combinedArray.Length))
+                        Dim query As String = "SELECT COUNT(*) FROM tblVehicleList WHERE ParkingLocation=@Location"
+                        Dim cmd As New OleDbCommand(query, conn)
+                        cmd.Parameters.AddWithValue("@Location", noParkingLocation)
+                        Dim count As Integer = CInt(cmd.ExecuteScalar())
+                        While count > 0
+                            noParkingLocation = combinedArray(rand.Next(0, combinedArray.Length))
+                            cmd.Parameters("@Location").Value = noParkingLocation
+                            count = CInt(cmd.ExecuteScalar())
+                        End While
+
+                        txtTicketNumber.Text = "TK-" & Serial.ToString("00000")
+                        createTicket()
+                    End If
                 End If
-
-                availLots -= 1
-                txtTicketNumber.Text = cbParkingLocation.Text & Serial.ToString("000")
-                rate = If(cbVehicleType.SelectedIndex = 0, vehicle2Wheels, vehicle4Wheels)
-                createTicket()
-            End If
-        Catch ex As Exception
-            dbFailed()
-            MessageBox.Show("An error occurred: " & ex.Message)
-        Finally
-            conn.Close()
-        End Try
-
-        loadDetails()
-        GetAvailability()
+                loadDetails()
+                GetAvailability()
+            Catch ex As Exception
+                dbFailed()
+                MessageBox.Show("An error occurred: " & ex.Message, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Finally
+                conn.Close()
+            End Try
+        End If
     End Sub
 
 
-    Private Sub btnReset_Click(sender As Object, e As EventArgs) Handles btnReset.Click
-        If cbVehicleType.SelectedIndex = 0 Then
-            avail2WheelLots = avail2WheelLots + 1
-        Else
-            avail4WheelLots = avail4WheelLots + 1
-        End If
 
+    Private Sub btnReset_Click(sender As Object, e As EventArgs) Handles btnReset.Click
         cbVehicleType.SelectedIndex = -1
         txtPlateNumber.Clear()
-        cbParkingLocation.SelectedIndex = -1
         txtTicketNumber.Clear()
         cbVehicleType.Enabled = True
         txtPlateNumber.Enabled = True
-        cbParkingLocation.Enabled = True
         btnCreateTicket.Enabled = True
     End Sub
 
@@ -271,9 +306,9 @@ Public Class MainForm
 
         e.Graphics.DrawString("Ticket Number: " + txtTicketNumber.Text, f5b, Brushes.Black, centermargin, 85, center)
         e.Graphics.DrawString("Vehicle Type: " + cbVehicleType.Text, f5, Brushes.Black, centermargin, 100, center)
-        e.Graphics.DrawString("Plate Number: " + txtPlateNumber.Text, f5, Brushes.Black, centermargin, 110, center)
-        e.Graphics.DrawString("Floor: " + cbFloor.SelectedItem, f5, Brushes.Black, centermargin, 120, center)
-        e.Graphics.DrawString("Park Location: " + cbParkingLocation.Text, f5, Brushes.Black, centermargin, 130, center)
+        'e.Graphics.DrawString("Plate Number: " + txtPlateNumber.Text, f5, Brushes.Black, centermargin, 110, center)
+        'e.Graphics.DrawString("Floor: " + cbFloor.SelectedItem, f5, Brushes.Black, centermargin, 120, center)
+        'e.Graphics.DrawString("Park Location: " + cbParkingLocation.Text, f5, Brushes.Black, centermargin, 130, center)
         e.Graphics.DrawString("Time In: " + Format(Now, "MM/dd/yy hh:mm tt"), f5, Brushes.Black, centermargin, 140, center)
 
         e.Graphics.DrawString("Base rate of P" + rate.ToString + " for " + cbVehicleType.SelectedItem + " type of vehicle", f5, Brushes.Black, centermargin, 156, center)
@@ -310,18 +345,20 @@ and regulations of the parking area.", f5, Brushes.Black, 20, 215)
 
     Private Sub btnNextVehicle_Click(sender As Object, e As EventArgs) Handles btnNextVehicle.Click
         If MsgBox("Create new ticket?", vbYesNo + vbQuestion, "New ticket") = vbYes Then
-            cbVehicleType.SelectedIndex = -1
+            'cbVehicleType.SelectedIndex = -1
             txtPlateNumber.Clear()
-            cbParkingLocation.SelectedIndex = -1
             txtTicketNumber.Clear()
 
             cbVehicleType.Enabled = True
             txtPlateNumber.Enabled = True
-            cbParkingLocation.Enabled = True
 
             btnPrintTicket.Enabled = False
             btnCreateTicket.Enabled = True
-            btnNextVehicle.Enabled = False
+            'btnNextVehicle.Enabled = False
+
+            cbVehicleType.SelectedIndex = 1
+            txtPlateNumber.Text = "TK " + Serial.ToString
+
             btnReset.Enabled = True
             Exit Sub
         End If
@@ -333,7 +370,7 @@ and regulations of the parking area.", f5, Brushes.Black, 20, 215)
             LoadTicketInfo()
         Catch ex As Exception
             dbFailed()
-            MessageBox.Show("An error occurred: " & ex.Message)
+            MessageBox.Show("An error occurred: " & ex.Message, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error)
         Finally
             conn.Close()
         End Try
@@ -462,7 +499,7 @@ and regulations of the parking area.", f5, Brushes.Black, 20, 215)
             MsgBox("Payment success", vbInformation, "Payment success")
         Catch ex As Exception
             dbFailed()
-            MessageBox.Show("An error occurred: " & ex.Message)
+            MessageBox.Show("An error occurred: " & ex.Message, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error)
         Finally
             conn.Close()
         End Try
@@ -472,13 +509,31 @@ and regulations of the parking area.", f5, Brushes.Black, 20, 215)
 
 
     Sub loadDetails()
-        connect()
-        Dim queryOccupied As String = "SELECT COUNT(*) FROM tblVehicleList WHERE TicketNumber"
-        Dim commandOccupied As New OleDb.OleDbCommand(queryOccupied, conn)
-        Dim countOccupied As Integer = commandOccupied.ExecuteScalar()
-        lblOccupied.Text = countOccupied.ToString()
-        lblVacant.Text = 139 - countOccupied
-        conn.Close()
+        Try
+            connect()
+            Dim queryOccupied As String = "SELECT COUNT(*) FROM tblVehicleList WHERE TicketNumber"
+            Dim commandOccupied As New OleDb.OleDbCommand(queryOccupied, conn)
+            Dim countOccupied As Integer = commandOccupied.ExecuteScalar()
+            lblTOccupied.Text = countOccupied.ToString()
+            lblTVacant.Text = 139 - countOccupied
+
+            Dim query2WString As String = "SELECT COUNT(*) FROM tblVehicleList WHERE VehicleType LIKE '%2 Wheels%'"
+            Dim command2 As New OleDb.OleDbCommand(query2WString, conn)
+            count2Slots = command2.ExecuteScalar()
+            lbl2Occupied.Text = count2Slots.ToString
+            lbl2Vacant.Text = 42 - count2Slots
+
+
+            Dim query4WString As String = "SELECT COUNT(*) FROM tblVehicleList WHERE VehicleType LIKE '%3/4 Wheels%'"
+            Dim command4 As New OleDb.OleDbCommand(query4WString, conn)
+            count4Slots = command4.ExecuteScalar()
+            lbl4Occupied.Text = count4Slots.ToString
+            lbl4Vacant.Text = 97 - count4Slots
+        Catch ex As Exception
+            MessageBox.Show("An error occurred: " & ex.Message, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            conn.Close()
+        End Try
     End Sub
 
     Private Sub VD_BeginPrint(sender As Object, e As PrintEventArgs) Handles VD.BeginPrint
@@ -1015,7 +1070,7 @@ and regulations of the parking area.", f5, Brushes.Black, 20, 215)
                     Case "2FA-12"
                         vehicle2FA12.Visible = True
                     Case "2FA-13"
-                        vehicle2FA03.Visible = True
+                        vehicle2FA13.Visible = True
                     Case "2FA-14"
                         vehicle2FA14.Visible = True
                     Case "2FA-15"
@@ -1107,7 +1162,7 @@ and regulations of the parking area.", f5, Brushes.Black, 20, 215)
                     Case "3FA-11"
                         vehicle3FA11.Visible = True
                     Case "3FA-12"
-                        vehicle3FA02.Visible = True
+                        vehicle3FA12.Visible = True
                     Case "3FA-13"
                         vehicle3FA13.Visible = True
                     Case "3FA-14"
@@ -1202,7 +1257,7 @@ and regulations of the parking area.", f5, Brushes.Black, 20, 215)
                 cmbMyField.Items.Add(reader("TicketNumber").ToString())
             End While
         Catch ex As Exception
-            MessageBox.Show("An error occurred: " & ex.Message)
+            MessageBox.Show("An error occurred: " & ex.Message, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error)
         Finally
             conn.Close()
         End Try

@@ -21,8 +21,10 @@ Module Module1
     Public FullName As String
 
     Public Serial As Integer = 0
-
-
+    Public count2 As Integer
+    Public count4 As Integer
+    Public count2Slots As Integer
+    Public count4Slots As Integer
 
     Public tempPass As String = "tempPass123!"
 
