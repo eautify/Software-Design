@@ -44,6 +44,7 @@ Partial Class ManagerForm
         Me.btnUPDATE4Wheels = New Guna.UI2.WinForms.Guna2Button()
         Me.txtEDIT4Wheels = New Guna.UI2.WinForms.Guna2TextBox()
         Me.Label1 = New System.Windows.Forms.Label()
+        Me.logoPARKINGS = New Guna.UI2.WinForms.Guna2CirclePictureBox()
         Me.btnUPDATE2Wheels = New Guna.UI2.WinForms.Guna2Button()
         Me.txtEDIT2Wheels = New Guna.UI2.WinForms.Guna2TextBox()
         Me.Label3 = New System.Windows.Forms.Label()
@@ -64,6 +65,7 @@ Partial Class ManagerForm
         Me.Label17 = New System.Windows.Forms.Label()
         Me.txtParkingFloor = New Guna.UI2.WinForms.Guna2TextBox()
         Me.Label18 = New System.Windows.Forms.Label()
+        Me.btnSearch = New Guna.UI2.WinForms.Guna2Button()
         Me.txtSearchTicketNumber = New Guna.UI2.WinForms.Guna2TextBox()
         Me.txtTimeOut = New Guna.UI2.WinForms.Guna2TextBox()
         Me.txtTimeIn = New Guna.UI2.WinForms.Guna2TextBox()
@@ -95,14 +97,12 @@ Partial Class ManagerForm
         Me.txtTotalWheels = New Guna.UI2.WinForms.Guna2TextBox()
         Me.Panel2 = New System.Windows.Forms.Panel()
         Me.lblUser = New System.Windows.Forms.Label()
-        Me.logoPARKINGS = New Guna.UI2.WinForms.Guna2CirclePictureBox()
-        Me.btnSearch = New Guna.UI2.WinForms.Guna2Button()
         Me.Panel1.SuspendLayout()
         Me.Panel9.SuspendLayout()
+        CType(Me.logoPARKINGS, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel8.SuspendLayout()
         Me.Panel4.SuspendLayout()
         Me.Panel3.SuspendLayout()
-        CType(Me.logoPARKINGS, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'lblHeading
@@ -460,6 +460,19 @@ Partial Class ManagerForm
         Me.Label1.Size = New System.Drawing.Size(205, 16)
         Me.Label1.TabIndex = 31
         Me.Label1.Text = "4 Wheels Vehicle Parking Fee:"
+        '
+        'logoPARKINGS
+        '
+        Me.logoPARKINGS.FillColor = System.Drawing.Color.Transparent
+        Me.logoPARKINGS.Image = Global.Software_Design.My.Resources.Resources.Par_KINGS1
+        Me.logoPARKINGS.ImageRotate = 0!
+        Me.logoPARKINGS.Location = New System.Drawing.Point(11, 58)
+        Me.logoPARKINGS.Name = "logoPARKINGS"
+        Me.logoPARKINGS.ShadowDecoration.Mode = Guna.UI2.WinForms.Enums.ShadowMode.Circle
+        Me.logoPARKINGS.Size = New System.Drawing.Size(315, 83)
+        Me.logoPARKINGS.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.logoPARKINGS.TabIndex = 30
+        Me.logoPARKINGS.TabStop = False
         '
         'btnUPDATE2Wheels
         '
@@ -830,6 +843,23 @@ Partial Class ManagerForm
         Me.Label18.Size = New System.Drawing.Size(97, 16)
         Me.Label18.TabIndex = 45
         Me.Label18.Text = "Parking Floor:"
+        '
+        'btnSearch
+        '
+        Me.btnSearch.BorderColor = System.Drawing.Color.White
+        Me.btnSearch.DisabledState.BorderColor = System.Drawing.Color.Gray
+        Me.btnSearch.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray
+        Me.btnSearch.DisabledState.FillColor = System.Drawing.Color.LightSalmon
+        Me.btnSearch.DisabledState.ForeColor = System.Drawing.Color.White
+        Me.btnSearch.FillColor = System.Drawing.Color.FromArgb(CType(CType(224, Byte), Integer), CType(CType(168, Byte), Integer), CType(CType(93, Byte), Integer))
+        Me.btnSearch.Font = New System.Drawing.Font("Century Gothic", 8.25!)
+        Me.btnSearch.ForeColor = System.Drawing.Color.White
+        Me.btnSearch.Image = Global.Software_Design.My.Resources.Resources.search
+        Me.btnSearch.ImageSize = New System.Drawing.Size(30, 30)
+        Me.btnSearch.Location = New System.Drawing.Point(383, 85)
+        Me.btnSearch.Name = "btnSearch"
+        Me.btnSearch.Size = New System.Drawing.Size(30, 30)
+        Me.btnSearch.TabIndex = 44
         '
         'txtSearchTicketNumber
         '
@@ -1403,36 +1433,6 @@ Partial Class ManagerForm
         Me.lblUser.TabIndex = 43
         Me.lblUser.Text = "FName LName"
         '
-        'logoPARKINGS
-        '
-        Me.logoPARKINGS.FillColor = System.Drawing.Color.Transparent
-        Me.logoPARKINGS.Image = Global.Software_Design.My.Resources.Resources.Par_KINGS1
-        Me.logoPARKINGS.ImageRotate = 0!
-        Me.logoPARKINGS.Location = New System.Drawing.Point(11, 58)
-        Me.logoPARKINGS.Name = "logoPARKINGS"
-        Me.logoPARKINGS.ShadowDecoration.Mode = Guna.UI2.WinForms.Enums.ShadowMode.Circle
-        Me.logoPARKINGS.Size = New System.Drawing.Size(315, 83)
-        Me.logoPARKINGS.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
-        Me.logoPARKINGS.TabIndex = 30
-        Me.logoPARKINGS.TabStop = False
-        '
-        'btnSearch
-        '
-        Me.btnSearch.BorderColor = System.Drawing.Color.White
-        Me.btnSearch.DisabledState.BorderColor = System.Drawing.Color.Gray
-        Me.btnSearch.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray
-        Me.btnSearch.DisabledState.FillColor = System.Drawing.Color.LightSalmon
-        Me.btnSearch.DisabledState.ForeColor = System.Drawing.Color.White
-        Me.btnSearch.FillColor = System.Drawing.Color.FromArgb(CType(CType(224, Byte), Integer), CType(CType(168, Byte), Integer), CType(CType(93, Byte), Integer))
-        Me.btnSearch.Font = New System.Drawing.Font("Century Gothic", 8.25!)
-        Me.btnSearch.ForeColor = System.Drawing.Color.White
-        Me.btnSearch.Image = Global.Software_Design.My.Resources.Resources.search
-        Me.btnSearch.ImageSize = New System.Drawing.Size(30, 30)
-        Me.btnSearch.Location = New System.Drawing.Point(383, 85)
-        Me.btnSearch.Name = "btnSearch"
-        Me.btnSearch.Size = New System.Drawing.Size(30, 30)
-        Me.btnSearch.TabIndex = 44
-        '
         'ManagerForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -1450,12 +1450,12 @@ Partial Class ManagerForm
         Me.Panel1.ResumeLayout(False)
         Me.Panel9.ResumeLayout(False)
         Me.Panel9.PerformLayout()
+        CType(Me.logoPARKINGS, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel8.ResumeLayout(False)
         Me.Panel4.ResumeLayout(False)
         Me.Panel4.PerformLayout()
         Me.Panel3.ResumeLayout(False)
         Me.Panel3.PerformLayout()
-        CType(Me.logoPARKINGS, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 

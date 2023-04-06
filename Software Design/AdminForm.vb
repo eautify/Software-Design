@@ -39,7 +39,6 @@ Public Class AdminForm
                         txtUsernameCreate.Clear()
                     End If
                 Catch ex As Exception
-                    dbFailed()
                     MessageBox.Show("An error occurred: " & ex.Message)
                 Finally
                     conn.Close()
@@ -68,7 +67,6 @@ Public Class AdminForm
                         txtLastNameReset.Clear()
                     End If
                 Catch ex As Exception
-                    dbFailed()
                     MessageBox.Show("An error occurred: " & ex.Message)
                 Finally
                     conn.Close()
@@ -85,106 +83,60 @@ Public Class AdminForm
         If txtUsernameReset.Text = Nothing Then
             MessageBox.Show("Information can not be incomplete!", "Reset Password", MessageBoxButtons.OK, MessageBoxIcon.Information)
         Else
+
+            Dim accountType = If(cbAccountTypeReset.SelectedIndex = 0, "employeeLogin", "managerLogin")
             If MessageBox.Show("Confirm password reset?", "Reset Password", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = vbYes Then
-                If cbAccountTypeReset.SelectedIndex = 0 Then
-                    Try
-                        da = New OleDbDataAdapter("Select * from employeeLogin where USERNAME='" & txtUsernameReset.Text & "' AND FirstName= '" & txtFirstNameReset.Text & "' AND LastName='" & txtLastNameReset.Text & "' AND BDAY='" & dtpBdayReset.Text & "'", conn)
-                        dset = New DataSet
-                        da.Fill(dset, "employeeLogin")
+                Try
+                    connect()
+                    da = New OleDbDataAdapter("Select * from " & accountType & " where USERNAME='" & txtUsernameReset.Text & "' AND FirstName= '" & txtFirstNameReset.Text & "' AND LastName='" & txtLastNameReset.Text & "' AND BDAY='" & dtpBdayReset.Text & "'", conn)
+                    dset = New DataSet
+                    da.Fill(dset, "accountType")
 
-                        If dset.Tables("employeeLogin").Rows.Count = 1 Then
-                            Dim sql As String = "UPDATE employeeLogin SET [PASSWORD]=@PASSWORD WHERE [USERNAME]=@USERNAME"
+                    If dset.Tables("accountType").Rows.Count = 1 Then
+                        Dim cmd As New OleDbCommand("UPDATE " & accountType & " SET [PASSWORD]=@PASSWORD WHERE [USERNAME]=@USERNAME", conn)
+                        cmd.Parameters.Add("@PASSWORD", OleDbType.VarChar).Value = "tempPass123!"
+                        cmd.Parameters.Add("@USERNAME", OleDbType.VarChar).Value = txtUsernameReset.Text
 
-                            Dim cmd As New OleDbCommand(sql, conn)
-                            cmd.Parameters.Add("@PASSWORD", OleDbType.VarChar).Value = "tempPass123!"
-                            cmd.Parameters.Add("@USERNAME", OleDbType.VarChar).Value = txtUsernameReset.Text
+                        cmd.ExecuteNonQuery()
+                        updateSuccessReset()
 
-                            connect()
-                            cmd.ExecuteNonQuery()
-                            updateSuccessReset()
-
-                            Dim cmdRemove As New OleDbCommand("Delete from passwordRequest where Username=@Username", conn)
-                            cmdRemove.Parameters.Add("@Username", OleDbType.VarChar).Value = ListBoxRequest.GetItemText(ListBoxRequest.SelectedValue)
-                            cmdRemove.ExecuteNonQuery()
-                            loadData()
-
-                        Else
-                            noRecords()
-                        End If
-                    Catch ex As Exception
-                        dbFailed()
-                        MessageBox.Show("An error occurred: " & ex.Message)
-                    Finally
-                        conn.Close()
-                        txtUsernameReset.Clear()
-                        cbAccountTypeReset.SelectedIndex = 0
-                    End Try
-                Else
-                    Try
-                        da = New OleDbDataAdapter("Select * from managerLogin where USERNAME='" & txtUsernameReset.Text & "' AND FirstName= '" & txtFirstNameReset.Text & "' AND LastName='" & txtLastNameReset.Text & "' AND BDAY='" & dtpBdayReset.Text & "'", conn)
-                        dset = New DataSet
-                        da.Fill(dset, "managerLogin")
-
-                        If dset.Tables("managerLogin").Rows.Count = 1 Then
-                            Dim sql As String = "UPDATE managerLogin SET [PASSWORD]=@PASSWORD WHERE [USERNAME]=@USERNAME"
-
-                            Dim cmd As New OleDbCommand(sql, conn)
-                            cmd.Parameters.Add("@PASSWORD", OleDbType.VarChar).Value = "tempPass123!"
-                            cmd.Parameters.Add("@USERNAME", OleDbType.VarChar).Value = txtUsernameReset.Text
-
-                            connect()
-                            cmd.ExecuteNonQuery()
-                            updateSuccessReset()
-
-                            Dim cmdRemove As New OleDbCommand("Delete from passwordRequest where Username=@Username", conn)
-                            cmdRemove.Parameters.Add("@Username", OleDbType.VarChar).Value = ListBoxRequest.GetItemText(ListBoxRequest.SelectedValue)
-                            cmdRemove.ExecuteNonQuery()
-                            loadData()
-                        Else
-                            noRecords()
-                        End If
-                    Catch ex As Exception
-                        dbFailed()
-                        MessageBox.Show("An error occurred: " & ex.Message)
-                    Finally
-                        conn.Close()
-                        txtUsernameReset.Clear()
-                        txtFirstNameReset.Clear()
-                        txtLastNameReset.Clear()
-                        cbAccountTypeReset.SelectedIndex = 0
-                    End Try
-                End If
+                        cmd = New OleDbCommand("Delete from passwordRequest where Username=@Username", conn)
+                        cmd.Parameters.Add("@Username", OleDbType.VarChar).Value = ListBoxRequest.GetItemText(ListBoxRequest.SelectedValue)
+                        cmd.ExecuteNonQuery()
+                        loadData()
+                    Else
+                        noRecords()
+                    End If
+                Catch ex As Exception
+                    MessageBox.Show("An error occurred: " & ex.Message)
+                Finally
+                    conn.Close()
+                    txtUsernameReset.Clear()
+                    txtFirstNameReset.Clear()
+                    txtLastNameReset.Clear()
+                    cbAccountTypeReset.SelectedIndex = 0
+                End Try
             End If
         End If
 
     End Sub
 
     Private Sub Guna2Button2_Click(sender As Object, e As EventArgs) Handles btnDelete.Click
-        If InputBox("To confirm the deletion of the account, please provide the password for the administrator account.", "Delete Account") = "Admiiin123!" Then
-            Dim accountType As String = IIf(cbAccountTypeDelete.SelectedIndex = 0, "employeeLogin", "managerLogin")
-            Try
-                da = New OleDbDataAdapter("Select * from " & accountType & " where Status='" & "Active" & "' and USERNAME='" & txtUsernameDelete.Text & "' and BDAY='" & dtpBDAYDelete.Text & "'", conn)
-                dset = New DataSet
-                da.Fill(dset, accountType)
-                If dset.Tables(accountType).Rows.Count = 1 Then
-                    connect()
-                    Dim sql As String = "UPDATE " & accountType & " SET [Status]=@Status WHERE [USERNAME]=@USERNAME"
-                    Dim cmd As New OleDbCommand(sql, conn)
-                    cmd.Parameters.AddWithValue("@Status", "Inactive")
-                    cmd.Parameters.AddWithValue("@USERNAME", txtUsernameReset.Text)
-                    cmd.ExecuteNonQuery()
-                    MessageBox.Show("The account " & txtUsernameDelete.Text & " has been deleted successfully.", "Account deleted!", MessageBoxButtons.OK, MessageBoxIcon.Information)
-                    txtUsernameDelete.Clear()
-                    cbAccountTypeDelete.SelectedIndex = 0
-                Else
-                    noRecords()
-                End If
-            Catch ex As Exception
-                dbFailed()
-                MessageBox.Show("An error occurred: " & ex.Message, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error)
-            Finally
-                conn.Close()
-            End Try
+        Dim accountType = If(cbAccountTypeDelete.SelectedIndex = 0, "employeeLogin", "managerLogin")
+        da = New OleDbDataAdapter("Select * from " & accountType & " where Status='" & "Active" & "' and USERNAME='" & txtUsernameDelete.Text & "' and BDAY='" & dtpBDAYDelete.Text & "'", conn)
+            dset = New DataSet
+            da.Fill(dset, accountType)
+        If dset.Tables(accountType).Rows.Count = 1 Then
+            connect()
+            Dim cmd As New OleDbCommand
+            cmd.Connection = conn
+            cmd.CommandText = "UPDATE " & accountType & " SET Status='" & "Inactive" & "' WHERE USERNAME='" & txtUsernameDelete.Text & "'"
+            cmd.ExecuteNonQuery()
+            MessageBox.Show(txtUsernameDelete.Text & "'s account has been tagged inactive successfully.", "Account deleted!", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            txtUsernameDelete.Clear()
+            cbAccountTypeDelete.SelectedIndex = 0
+        Else
+            noRecords()
         End If
     End Sub
 
@@ -213,8 +165,7 @@ Public Class AdminForm
             ListBoxRequest.DisplayMember = "Username"
             ListBoxRequest.ClearSelected()
         Catch ex As Exception
-            dbFailed()
-            MessageBox.Show("An error occurred: " & ex.Message, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            MessageBox.Show("An error occurred!" & vbCrlf & ex.Message, "Database Failure!", MessageBoxButtons.OK, MessageBoxIcon.Error)
         Finally
             conn.Close()
         End Try
@@ -229,8 +180,7 @@ Public Class AdminForm
                 cmd.ExecuteNonQuery()
                 loadData()
             Catch ex As Exception
-                dbFailed()
-                MessageBox.Show("An error occurred: " & ex.Message, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                MessageBox.Show("An error occurred!" & vbCrlf & ex.Message, "Database Failure!", MessageBoxButtons.OK, MessageBoxIcon.Error)
             Finally
                 conn.Close()
                 txtUsernameReset.Clear()

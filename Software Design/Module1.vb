@@ -58,10 +58,6 @@ Module Module1
         LogIn_Form.txtPassword3.Text = ""
     End Sub
 
-    Sub dbFailed()
-        MessageBox.Show("Database error.", "Database Error!", MessageBoxButtons.OK, MessageBoxIcon.Error)
-    End Sub
-
     Sub noRecords()
         MessageBox.Show("No records found.", "No records!", MessageBoxButtons.OK, MessageBoxIcon.Information)
     End Sub

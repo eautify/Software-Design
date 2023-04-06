@@ -93,7 +93,7 @@ Public Class ManagerForm
             txtSearchTicketNumber.AutoCompleteCustomSource = coloumn1
             txtSearchTicketNumber.AutoCompleteMode = AutoCompleteMode.Suggest
         Catch ex As Exception
-            dbFailed()
+            MessageBox.Show("An error occurred: " & ex.Message)
         End Try
 
         lblUser.Text = FullName
@@ -161,7 +161,6 @@ Public Class ManagerForm
             End If
             conn.Close()
         Catch ex As Exception
-            dbFailed()
             MessageBox.Show("An error occurred: " & ex.Message)
         Finally
             conn.Close()
@@ -232,17 +231,17 @@ Public Class ManagerForm
     Public Sub loadDetailss()
         Try
             connect()
-            Dim query2WString As String = "SELECT COUNT(*) FROM tblTransactionHistory WHERE VehicleType LIKE '%2 Wheels%'"
+            Dim query2WString As String = "SELECT COUNT(*) FROM tblParkingActivity WHERE VehicleType LIKE '%2 Wheels%'"
             Dim command2 As New OleDb.OleDbCommand(query2WString, conn)
             count2 = command2.ExecuteScalar()
             txtTotal2Wheels.Text = count2.ToString()
 
-            Dim query4WString As String = "SELECT COUNT(*) FROM tblTransactionHistory WHERE VehicleType LIKE '%3/4 Wheels%'"
+            Dim query4WString As String = "SELECT COUNT(*) FROM tblParkingActivity WHERE VehicleType LIKE '%3/4 Wheels%'"
             Dim command4 As New OleDb.OleDbCommand(query4WString, conn)
             count4 = command4.ExecuteScalar()
             txtTotal4Wheels.Text = count4.ToString()
 
-            Dim queryString As String = "SELECT COUNT(*) FROM tblTransactionHistory WHERE VehicleType"
+            Dim queryString As String = "SELECT COUNT(*) FROM tblParkingActivity WHERE VehicleType"
             Dim command As New OleDb.OleDbCommand(queryString, conn)
             Dim count As Integer = command.ExecuteScalar()
             txtTotalWheels.Text = count.ToString()
@@ -259,12 +258,8 @@ Public Class ManagerForm
             Dim commandOccupied As New OleDb.OleDbCommand(queryOccupied, conn)
             Dim countOccupied As Integer = commandOccupied.ExecuteScalar()
             txtOccupied.Text = countOccupied.ToString()
-            MainForm.lblTOccupied.Text = countOccupied.ToString()
-
             txtVacant.Text = 139 - countOccupied
-            MainForm.lblTVacant.Text = 139 - countOccupied
         Catch ex As Exception
-            dbFailed()
             MessageBox.Show("An error occurred: " & ex.Message)
         Finally
             conn.Close()

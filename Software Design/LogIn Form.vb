@@ -24,64 +24,56 @@ Public Class LogIn_Form
     End Sub
 
     Private Sub Guna2Button1_Click(sender As Object, e As EventArgs) Handles btnLogin.Click
-        Dim accType As String
-        If cbLoginType.SelectedIndex = 0 Then
-            accType = "employeeLogin"
-        ElseIf cbLoginType.SelectedIndex = 1 Then
-            accType = "admin"
-        Else
-            accType = "managerLogin"
-        End If
-
         If cbLoginType.Text = "" Or txtUserNameLogin.Text = "" Or txtPassword1.Text = Nothing Then
             loginFailed()
-        Else
-            connect()
-            If cbLoginType.SelectedIndex = 0 Or cbLoginType.SelectedIndex = 2 Then
-                Try
-                    da = New OleDbDataAdapter("Select * from " & accType & " where Status='" & "Active" & "' and USERNAME='" & txtUserNameLogin.Text & "' and PASSWORD='" & txtPassword1.Text & "'", conn)
-                    dset = New DataSet
-                    da.Fill(dset, accType)
-                    If dset.Tables(accType).Rows.Count = 1 Then
-                        Dim cmd As New OleDbCommand("Select * from " & accType & " where USERNAME=@USERNAME", conn)
-                        cmd.Parameters.AddWithValue("USERNAME", txtUserNameLogin.Text.Trim)
-                        Dim myreader As OleDbDataReader
-                        myreader = cmd.ExecuteReader
-                        If myreader.Read() Then
-                            FName = myreader("FirstName").ToString
-                            LName = myreader("LastName").ToString
-                        Else
-                            MessageBox.Show("No records found.", "ERROR")
-                        End If
-                        If txtPassword1.Text = "tempPass123!" Then
-                            TabControl.SelectedTab = tabSetNewPass
-                            txtUsernameCreate.Text = txtUserNameLogin.Text
-                            txtAccountType.Text = cbLoginType.Text
-                        Else
-                            If accType = "employeeLogin" Then
-                                TabControl.SelectedTab = EmployeeChoice
-                            Else
-                                ManagerForm.Show()
-                                Me.Hide()
-                            End If
-                        End If
+            Exit Sub
+        End If
+
+        connect()
+        Dim accType As String = If(cbLoginType.SelectedIndex = 0, "employeeLogin", If(cbLoginType.SelectedIndex = 1, "admin", "managerLogin"))
+        If cbLoginType.SelectedIndex = 0 Or cbLoginType.SelectedIndex = 2 Then
+            Try
+                da = New OleDbDataAdapter("Select * from " & accType & " where Status='" & "Active" & "' and USERNAME='" & txtUserNameLogin.Text & "' and PASSWORD='" & txtPassword1.Text & "'", conn)
+                dset = New DataSet
+                da.Fill(dset, accType)
+                If dset.Tables(accType).Rows.Count = 1 Then
+                    Dim cmd As New OleDbCommand("Select * from " & accType & " where USERNAME=@USERNAME", conn)
+                    cmd.Parameters.AddWithValue("USERNAME", txtUserNameLogin.Text.Trim)
+                    Dim myreader As OleDbDataReader
+                    myreader = cmd.ExecuteReader
+                    If myreader.Read() Then
+                        FName = myreader("FirstName").ToString
+                        LName = myreader("LastName").ToString
                     Else
-                        loginFailed()
+                        MessageBox.Show("No records found.", "ERROR")
                     End If
-                Catch ex As Exception
-                    dbFailed()
-                    MessageBox.Show("An error occurred: " & ex.Message)
-                Finally
-                    conn.Close()
-                End Try
-            Else
-                If txtUserNameLogin.Text = "Admin" And txtPassword1.Text = "Admiiin123!" Then
-                    AdminForm.Show()
-                    Me.Hide()
+                    If txtPassword1.Text = "tempPass123!" Then
+                        TabControl.SelectedTab = tabSetNewPass
+                        txtUsernameCreate.Text = txtUserNameLogin.Text
+                        txtAccountType.Text = cbLoginType.Text
+                    Else
+                        If accType = "employeeLogin" Then
+                            TabControl.SelectedTab = EmployeeChoice
+                        Else
+                            ManagerForm.Show()
+                            Me.Hide()
+                        End If
+                    End If
                 Else
                     loginFailed()
                 End If
-            End If
+            Catch ex As Exception
+                MessageBox.Show("An error occurred: " & ex.Message)
+            Finally
+                conn.Close()
+            End Try
+            Exit Sub
+        End If
+        If txtUserNameLogin.Text = "Admin" And txtPassword1.Text = "Admiiin123!" Then
+            AdminForm.Show()
+            Me.Hide()
+        Else
+            loginFailed()
         End If
         FullName = FName & " " & LName
     End Sub
@@ -179,7 +171,6 @@ Public Class LogIn_Form
             updateSuccess()
             TabControl.SelectedTab = LogInForm
         Catch ex As Exception
-            dbFailed()
             MessageBox.Show("An error occurred: " & ex.Message)
         Finally
             conn.Close()
@@ -221,8 +212,7 @@ Public Class LogIn_Form
                         End If
                     End If
                 Catch ex As Exception
-                    dbFailed()
-                    MessageBox.Show("An error occurred: " & ex.Message, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    MessageBox.Show("An error occurred!" & vbCrlf & ex.Message, "Database Failure!", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 Finally
                     conn.Close()
                     txtUsernameRequest.Clear()
@@ -249,8 +239,7 @@ Public Class LogIn_Form
                         End If
                     End If
                 Catch ex As Exception
-                    dbFailed()
-                    MessageBox.Show("An error occurred: " & ex.Message, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    MessageBox.Show("An error occurred!" & vbCrlf & ex.Message, "Database Failure!", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 Finally
                     conn.Close()
                     txtUsernameRequest.Clear()

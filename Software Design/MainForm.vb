@@ -49,20 +49,15 @@ Public Class MainForm
             connect()
             Dim query As String = "SELECT MAX(ID) FROM ticketNumbers"
             Using command As New OleDbCommand(query, conn)
-                ' Execute the SQL query and retrieve the highest value
                 Dim highestValue As Object = command.ExecuteScalar()
-
-                ' Check if the highest value is not null
                 If highestValue IsNot DBNull.Value Then
-                    ' Display the highest value in a message box
                     Serial = CInt(highestValue)
                 Else
                     Serial = 0
                 End If
             End Using
         Catch ex As Exception
-            dbFailed()
-            MessageBox.Show("An error occurred: " & ex.Message, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            MessageBox.Show("An error occurred!" & vbCrLf & ex.Message, "Database Failure!", MessageBoxButtons.OK, MessageBoxIcon.Error)
         Finally
             conn.Close()
         End Try
@@ -78,7 +73,7 @@ Public Class MainForm
         lblUser.Text = FullName
 
         btnPrintTicket.Enabled = False
-        'btnNextVehicle.Enabled = False
+        btnNextVehicle.Enabled = False
         txtAmountTendered.Enabled = False
         btnPay.Enabled = False
         btnPrintReceipt.Enabled = False
@@ -99,8 +94,7 @@ Public Class MainForm
             listVehicle.DisplayMember = "ParkingLocation"
             listVehicle.ClearSelected()
         Catch ex As Exception
-            dbFailed()
-            MessageBox.Show("An error occurred: " & ex.Message, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            MessageBox.Show("An error occurred!" & vbCrLf & ex.Message, "Database Failure!", MessageBoxButtons.OK, MessageBoxIcon.Error)
         Finally
             conn.Close()
         End Try
@@ -121,7 +115,7 @@ Public Class MainForm
         Next
 
         btnCreateTicket.Enabled = False
-        'btnPrintTicket.Enabled = True
+        btnPrintTicket.Enabled = True
         btnReset.Enabled = False
 
         connect()
@@ -149,7 +143,7 @@ Public Class MainForm
             cmd.Parameters.AddWithValue("@ticket", txtTicketNumber.Text)
             cmd.ExecuteNonQuery()
         Catch ex As Exception
-            MessageBox.Show("An error occurred: " & ex.Message, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            MessageBox.Show("An error occurred!" & vbCrLf & ex.Message, "Database Failure!", MessageBoxButtons.OK, MessageBoxIcon.Error)
         Finally
             conn.Close()
         End Try
@@ -253,8 +247,7 @@ Public Class MainForm
                 loadDetails()
                 GetAvailability()
             Catch ex As Exception
-                dbFailed()
-                MessageBox.Show("An error occurred: " & ex.Message, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                MessageBox.Show("An error occurred!" & vbCrLf & ex.Message, "Database Failure!", MessageBoxButtons.OK, MessageBoxIcon.Error)
             Finally
                 conn.Close()
             End Try
@@ -345,7 +338,7 @@ and regulations of the parking area.", f5, Brushes.Black, 20, 215)
 
     Private Sub btnNextVehicle_Click(sender As Object, e As EventArgs) Handles btnNextVehicle.Click
         If MsgBox("Create new ticket?", vbYesNo + vbQuestion, "New ticket") = vbYes Then
-            'cbVehicleType.SelectedIndex = -1
+            cbVehicleType.SelectedIndex = -1
             txtPlateNumber.Clear()
             txtTicketNumber.Clear()
 
@@ -354,10 +347,7 @@ and regulations of the parking area.", f5, Brushes.Black, 20, 215)
 
             btnPrintTicket.Enabled = False
             btnCreateTicket.Enabled = True
-            'btnNextVehicle.Enabled = False
-
-            cbVehicleType.SelectedIndex = 1
-            txtPlateNumber.Text = "TK " + Serial.ToString
+            btnNextVehicle.Enabled = False
 
             btnReset.Enabled = True
             Exit Sub
@@ -369,8 +359,7 @@ and regulations of the parking area.", f5, Brushes.Black, 20, 215)
             connect()
             LoadTicketInfo()
         Catch ex As Exception
-            dbFailed()
-            MessageBox.Show("An error occurred: " & ex.Message, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            MessageBox.Show("An error occurred!" & vbCrLf & ex.Message, "Database Failure!", MessageBoxButtons.OK, MessageBoxIcon.Error)
         Finally
             conn.Close()
         End Try
@@ -498,12 +487,11 @@ and regulations of the parking area.", f5, Brushes.Black, 20, 215)
 
             MsgBox("Payment success", vbInformation, "Payment success")
         Catch ex As Exception
-            dbFailed()
-            MessageBox.Show("An error occurred: " & ex.Message, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            MessageBox.Show("An error occurred!" & vbCrLf & ex.Message, "Database Failure!", MessageBoxButtons.OK, MessageBoxIcon.Error)
         Finally
             conn.Close()
         End Try
-
+        loadDetails()
         populate()
     End Sub
 
@@ -530,7 +518,7 @@ and regulations of the parking area.", f5, Brushes.Black, 20, 215)
             lbl4Occupied.Text = count4Slots.ToString
             lbl4Vacant.Text = 97 - count4Slots
         Catch ex As Exception
-            MessageBox.Show("An error occurred: " & ex.Message, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            MessageBox.Show("An error occurred!" & vbCrLf & ex.Message, "Database Failure!", MessageBoxButtons.OK, MessageBoxIcon.Error)
         Finally
             conn.Close()
         End Try
@@ -1239,8 +1227,7 @@ and regulations of the parking area.", f5, Brushes.Black, 20, 215)
             End While
             reader.Close()
         Catch ex As Exception
-            dbFailed()
-            MessageBox.Show("An error occurred: " & ex.Message, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            MessageBox.Show("An error occurred!" & vbCrLf & ex.Message, "Database Failure!", MessageBoxButtons.OK, MessageBoxIcon.Error)
         Finally
             conn.Close()
         End Try
@@ -1257,7 +1244,7 @@ and regulations of the parking area.", f5, Brushes.Black, 20, 215)
                 cmbMyField.Items.Add(reader("TicketNumber").ToString())
             End While
         Catch ex As Exception
-            MessageBox.Show("An error occurred: " & ex.Message, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            MessageBox.Show("An error occurred!" & vbCrLf & ex.Message, "Database Failure!", MessageBoxButtons.OK, MessageBoxIcon.Error)
         Finally
             conn.Close()
         End Try
